@@ -7,36 +7,30 @@
 <title>IRON x XTOZZE TOURNOI</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
 
 body{
 background:#050505;
 color:white;
-padding:15px;
+font-family:Arial,sans-serif;
+padding:20px;
 }
 
 h1{
 text-align:center;
 color:#ff3030;
-margin-bottom:20px;
 text-shadow:0 0 15px red;
 }
 
 .top{
 text-align:center;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
 #timer{
 font-size:70px;
 font-weight:bold;
 color:#ff3030;
-margin:10px 0;
+margin:15px 0;
 }
 
 button{
@@ -50,48 +44,20 @@ margin:3px;
 font-weight:bold;
 }
 
-button:hover{
-opacity:.85;
-}
-
-.teams{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:8px;
-}
-
 .team{
 background:#111;
 border:1px solid #ff3030;
+padding:10px;
+margin-bottom:8px;
 border-radius:8px;
-padding:5px;
-min-height:60px;
+font-size:15px;
 }
 
-.team h3{
-text-align:center;
+.team-name{
 color:#ff3030;
-font-size:14px;
-margin-bottom:2px;
+font-weight:bold;
 }
 
-.player{
-text-align:center;
-font-size:12px;
-padding:1px;
-}
-
-@media(max-width:1000px){
-.teams{
-grid-template-columns:repeat(3,1fr);
-}
-}
-
-@media(max-width:700px){
-.teams{
-grid-template-columns:repeat(2,1fr);
-}
-}
 </style>
 </head>
 
@@ -119,14 +85,9 @@ grid-template-columns:repeat(2,1fr);
 <button onclick="addTime(60)">+1m</button>
 <button onclick="addTime(120)">+2m</button>
 
-<br><br>
-
-<button onclick="generateTeams()">🎲 Générer équipes</button>
-<button onclick="clearTeams()">🗑 Supprimer équipes</button>
-
 </div>
 
-<div id="teams" class="teams"></div>
+<div id="teams"></div>
 
 <script>
 
@@ -134,33 +95,39 @@ let totalSeconds = 0;
 let interval = null;
 
 function updateTimer(){
+
 const m = Math.floor(totalSeconds/60);
 const s = totalSeconds%60;
 
 document.getElementById("timer").innerText =
 String(m).padStart(2,"0")+":"+
 String(s).padStart(2,"0");
+
 }
 
 function startTimer(){
+
 if(interval) return;
 
 interval = setInterval(()=>{
+
 if(totalSeconds>0){
 totalSeconds--;
 updateTimer();
 }
+
 },1000);
+
 }
 
 function pauseTimer(){
 clearInterval(interval);
-interval = null;
+interval=null;
 }
 
 function resetTimer(){
 pauseTimer();
-totalSeconds = 0;
+totalSeconds=0;
 updateTimer();
 }
 
@@ -169,25 +136,21 @@ totalSeconds += sec;
 updateTimer();
 }
 
-function clearTeams(){
-document.getElementById("teams").innerHTML = "";
-}
-
 function generateTeams(){
 
 const container =
 document.getElementById("teams");
 
-container.innerHTML = "";
+container.innerHTML="";
 
 for(let i=1;i<=17;i++){
 
 container.innerHTML += `
 <div class="team">
-<h3>TEAM ${i}</h3>
-<div class="player">-</div>
-<div class="player">-</div>
-<div class="player">-</div>
+<span class="team-name">TEAM ${i}</span>
+ | Joueur 1
+ | Joueur 2
+ | Joueur 3
 </div>
 `;
 
