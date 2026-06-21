@@ -3,167 +3,350 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Switch - Iron x Xtozze</title>
+<title>SWITCH - Tournoi Warzone</title>
 
 <style>
-body{
+*{
 margin:0;
-background:#050505;
-color:white;
-font-family:Arial,sans-serif;
+padding:0;
+box-sizing:border-box;
 }
 
-.container{
-display:grid;
-grid-template-columns:300px 1fr 350px;
-gap:20px;
+body{
+background:#0a0a0a;
+font-family:Arial,sans-serif;
+color:white;
 padding:20px;
 }
 
-.panel{
-background:#111;
-border:2px solid red;
-border-radius:12px;
-padding:15px;
-}
-
-h2{
-color:red;
-margin-top:0;
-}
-
-#timer{
-font-size:60px;
+h1{
 text-align:center;
-color:red;
+color:#ff2a2a;
+margin-bottom:20px;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.top{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.card{
+background:#111;
+border:2px solid #ff2a2a;
+border-radius:10px;
+padding:15px;
+flex:1;
+min-width:300px;
+}
+
+.timer{
+font-size:60px;
 font-weight:bold;
+text-align:center;
+color:#ff2a2a;
+margin:20px 0;
 }
 
 button{
-background:red;
+background:#ff2a2a;
 color:white;
 border:none;
-padding:8px 12px;
-margin:4px;
-border-radius:6px;
+padding:10px 15px;
+border-radius:5px;
 cursor:pointer;
+font-weight:bold;
+margin:3px;
+}
+
+button:hover{
+opacity:0.8;
 }
 
 input{
 width:100%;
-padding:8px;
-margin:4px 0;
+padding:10px;
+margin-bottom:10px;
 background:#1a1a1a;
 border:1px solid #333;
 color:white;
+border-radius:5px;
 }
 
-.team{
-border:1px solid #333;
-padding:10px;
-margin-bottom:10px;
-border-radius:8px;
+.player-list{
+max-height:300px;
+overflow:auto;
+}
+
+.player{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:5px;
+border-bottom:1px solid #222;
 }
 
 .teams{
-max-height:700px;
-overflow:auto;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:20px;
+}
+
+.team{
+background:#111;
+border:2px solid #ff2a2a;
+border-radius:10px;
+padding:10px;
+}
+
+.team h3{
+color:#ff2a2a;
+margin-bottom:10px;
+text-align:center;
+}
+
+.team ul{
+list-style:none;
+}
+
+.team li{
+padding:5px;
+border-bottom:1px solid #222;
+}
+
+@media(max-width:900px){
+.teams{
+grid-template-columns:1fr;
+}
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<!-- JOUEURS -->
-<div class="panel">
+<h1>SWITCH - TOURNOI WARZONE</h1>
 
-<h2>JOUEURS</h2>
+<div class="top">
 
-<input id="playerName" placeholder="Nom du joueur">
+<div class="card">
+<h2>Timer</h2>
 
-<button>Ajouter joueur</button>
+<div class="timer" id="timer">
+00:00
+</div>
 
-<hr>
+<button onclick="startTimer()">START</button>
+<button onclick="pauseTimer()">PAUSE</button>
+<button onclick="resetTimer()">RESET</button>
 
-<div id="playersList">
+</div>
+
+<div class="card">
+<h2>Joueurs</h2>
+
+<input type="text" id="playerName" placeholder="Nom du joueur">
+
+<button onclick="addPlayer()">
+Ajouter Joueur
+</button>
+
+<button onclick="generateTeams()">
+Créer les équipes
+</button>
+
+<p style="margin-top:10px;">
+Joueurs : <span id="playerCount">0</span>
+</p>
+
+<div class="player-list" id="playerList"></div>
 
 </div>
 
 </div>
 
-<!-- CENTRE -->
-<div class="panel">
+<h2 style="text-align:center;margin-bottom:15px;">
+17 Équipes Trio
+</h2>
 
-<h2>TIMER</h2>
-
-<div id="timer">00:00</div>
-
-<div style="text-align:center;">
-
-<button>START</button>
-<button>PAUSE</button>
-<button>STOP</button>
-
-<br>
-
-<button>+5s</button>
-<button>+10s</button>
-<button>+20s</button>
-<button>+30s</button>
-
-<br>
-
-<button>+1m</button>
-<button>+2m</button>
+<div class="teams" id="teamsContainer"></div>
 
 </div>
 
-<hr>
+<script>
 
-<h2>INFOS</h2>
+let seconds = 0;
+let interval = null;
 
-<p>Inscrits : 0</p>
-<p>Équipes : 17</p>
-<p>Top Killer : -</p>
-<p>Cagnotte : 0 €</p>
+function updateTimer(){
 
-<hr>
+let min = Math.floor(seconds / 60);
+let sec = seconds % 60;
 
-<button>Créer équipes</button>
-<button>Supprimer équipes</button>
+document.getElementById("timer").innerText =
+String(min).padStart(2,"0") + ":" +
+String(sec).padStart(2,"0");
 
-</div>
+}
 
-<!-- EQUIPES -->
-<div class="panel">
+function startTimer(){
 
-<h2>EQUIPES</h2>
+if(interval) return;
 
-<div class="teams">
+interval = setInterval(() => {
+seconds++;
+updateTimer();
+},1000);
 
-<div class="team">
-<h3>TEAM 1</h3>
-<p>-</p>
-<p>-</p>
-<p>-</p>
-</div>
+}
 
-<div class="team">
-<h3>TEAM 2</h3>
-<p>-</p>
-<p>-</p>
-<p>-</p>
-</div>
+function pauseTimer(){
 
-<!-- jusqu'à TEAM 17 -->
+clearInterval(interval);
+interval = null;
 
-</div>
+}
 
-</div>
+function resetTimer(){
 
-</div>
+pauseTimer();
+seconds = 0;
+updateTimer();
+
+}
+
+let players = [];
+
+function addPlayer(){
+
+const input = document.getElementById("playerName");
+const name = input.value.trim();
+
+if(name === "") return;
+
+players.push(name);
+
+input.value = "";
+
+renderPlayers();
+
+}
+
+function removePlayer(index){
+
+players.splice(index,1);
+
+renderPlayers();
+
+}
+
+function renderPlayers(){
+
+const list = document.getElementById("playerList");
+
+list.innerHTML = "";
+
+players.forEach((player,index)=>{
+
+const div = document.createElement("div");
+
+div.className = "player";
+
+div.innerHTML = `
+<span>${player}</span>
+<button onclick="removePlayer(${index})">
+X
+</button>
+`;
+
+list.appendChild(div);
+
+});
+
+document.getElementById("playerCount").innerText =
+players.length;
+
+}
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j = Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]] =
+[array[j],array[i]];
+
+}
+
+}
+
+function generateTeams(){
+
+const container =
+document.getElementById("teamsContainer");
+
+container.innerHTML = "";
+
+let shuffled = [...players];
+
+shuffle(shuffled);
+
+let teams = [];
+
+for(let i=0;i<17;i++){
+teams.push([]);
+}
+
+let currentTeam = 0;
+
+shuffled.forEach(player=>{
+
+teams[currentTeam].push(player);
+
+currentTeam++;
+
+if(currentTeam >= 17){
+currentTeam = 0;
+}
+
+});
+
+teams.forEach((team,index)=>{
+
+const div = document.createElement("div");
+
+div.className = "team";
+
+let html = `
+<h3>Équipe ${index+1}</h3>
+<ul>
+`;
+
+team.forEach(player=>{
+html += `<li>${player}</li>`;
+});
+
+html += "</ul>";
+
+div.innerHTML = html;
+
+container.appendChild(div);
+
+});
+
+}
+
+updateTimer();
+
+</script>
 
 </body>
 </html>
