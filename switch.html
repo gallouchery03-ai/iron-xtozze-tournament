@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Switch</title>
+<title>SWITCH TOURNOI</title>
 
 <style>
 
@@ -16,6 +16,7 @@ padding:15px;
 h1{
 text-align:center;
 color:#ff3030;
+text-shadow:0 0 10px red;
 }
 
 #timer{
@@ -23,6 +24,11 @@ text-align:center;
 font-size:60px;
 color:#ff3030;
 margin:10px;
+font-weight:bold;
+}
+
+.center{
+text-align:center;
 }
 
 button{
@@ -33,25 +39,33 @@ padding:8px 12px;
 margin:3px;
 border-radius:8px;
 cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+opacity:0.85;
 }
 
 .team{
 background:#111;
 border:1px solid #ff3030;
-padding:10px;
-margin:5px 0;
 border-radius:8px;
+padding:10px;
+margin-bottom:8px;
 }
 
 .title{
 color:#ff3030;
 font-weight:bold;
+margin-bottom:5px;
 }
 
 .player{
-margin-left:10px;
-color:white;
+display:inline-block;
+margin-right:8px;
+opacity:0.9;
 }
+
 </style>
 
 </head>
@@ -62,87 +76,107 @@ color:white;
 
 <div id="timer">00:00</div>
 
-<div style="text-align:center;">
+<div class="center">
+
 <button onclick="start()">START</button>
 <button onclick="pause()">PAUSE</button>
 <button onclick="reset()">STOP</button>
+
 <br>
+
 <button onclick="add(10)">+10s</button>
 <button onclick="add(30)">+30s</button>
 <button onclick="add(60)">+1m</button>
+
+<br><br>
+
+<button onclick="generate()">🎲 GÉNÉRER ÉQUIPES</button>
+<button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
+
 </div>
 
 <br>
-
-<button onclick="generate()">GÉNÉRER ÉQUIPES</button>
 
 <div id="teams"></div>
 
 <script>
 
-let t=0, inter=null;
+let time = 0;
+let interval = null;
 
+/* TIMER */
 function update(){
-let m=Math.floor(t/60);
-let s=t%60;
-document.getElementById("timer").innerText=
+let m = Math.floor(time/60);
+let s = time%60;
+
+document.getElementById("timer").innerText =
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function start(){
-if(inter) return;
-inter=setInterval(()=>{
-if(t>0){t--;update();}
+if(interval) return;
+interval = setInterval(()=>{
+if(time>0){
+time--;
+update();
+}
 },1000);
 }
 
 function pause(){
-clearInterval(inter);
-inter=null;
+clearInterval(interval);
+interval = null;
 }
 
 function reset(){
 pause();
-t=0;
+time = 0;
 update();
 }
 
-function add(x){
-t+=x;
+function add(sec){
+time += sec;
 update();
 }
 
+/* PLAYERS FROM INSCRIPTIONS */
 function getPlayers(){
-return JSON.parse(localStorage.getItem("players")||"[]");
+return JSON.parse(localStorage.getItem("players") || "[]");
 }
 
+/* GENERATE TEAMS (MAX 5) */
 function generate(){
 
 let players = getPlayers();
-let teamSize = 3;
+let size = 3;
 
 let container = document.getElementById("teams");
-container.innerHTML="";
+container.innerHTML = "";
 
-for(let i=0;i<players.length;i+=teamSize){
+for(let i=0;i<5;i++){
 
-let team = players.slice(i,i+teamSize);
+let teamPlayers = players.slice(i*size,(i+1)*size);
 
-let html="";
+let html = "";
 
-team.forEach(p=>{
+teamPlayers.forEach(p=>{
 html += `<span class="player">${p}</span>`;
 });
 
 container.innerHTML += `
 <div class="team">
-<div class="title">TEAM ${(i/teamSize)+1}</div>
+<div class="title">TEAM ${i+1}</div>
 ${html}
 </div>
 `;
 
 }
 
+}
+
+/* CLEAR */
+function clearTeams(){
+document.getElementById("teams").innerHTML = "";
 }
 
 update();
