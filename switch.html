@@ -23,8 +23,8 @@ text-shadow:0 0 10px red;
 text-align:center;
 font-size:60px;
 color:#ff3030;
-margin:10px;
 font-weight:bold;
+margin:10px;
 }
 
 .center{
@@ -46,28 +46,36 @@ button:hover{
 opacity:0.85;
 }
 
+/* 🔥 GRILLE 5 PAR LIGNE */
+#teams{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
+margin-top:20px;
+}
+
 .team{
 background:#111;
 border:1px solid #ff3030;
 border-radius:8px;
-padding:10px;
-margin-bottom:8px;
+padding:8px;
+text-align:center;
+font-size:14px;
 }
 
 .title{
 color:#ff3030;
 font-weight:bold;
-margin-bottom:5px;
+margin-bottom:4px;
 }
 
 .player{
-display:inline-block;
-margin-right:8px;
+display:block;
+font-size:12px;
 opacity:0.9;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -95,27 +103,25 @@ opacity:0.9;
 
 </div>
 
-<br>
-
 <div id="teams"></div>
 
 <script>
 
-let time = 0;
-let interval = null;
+let time=0;
+let interval=null;
 
 /* TIMER */
 function update(){
-let m = Math.floor(time/60);
-let s = time%60;
+let m=Math.floor(time/60);
+let s=time%60;
 
-document.getElementById("timer").innerText =
+document.getElementById("timer").innerText=
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function start(){
 if(interval) return;
-interval = setInterval(()=>{
+interval=setInterval(()=>{
 if(time>0){
 time--;
 update();
@@ -125,58 +131,56 @@ update();
 
 function pause(){
 clearInterval(interval);
-interval = null;
+interval=null;
 }
 
 function reset(){
 pause();
-time = 0;
+time=0;
 update();
 }
 
 function add(sec){
-time += sec;
+time+=sec;
 update();
 }
 
-/* PLAYERS FROM INSCRIPTIONS */
+/* PLAYERS */
 function getPlayers(){
-return JSON.parse(localStorage.getItem("players") || "[]");
+return JSON.parse(localStorage.getItem("players")||"[]");
 }
 
-/* GENERATE TEAMS (MAX 5) */
+/* 🔥 GRID TEAMS */
 function generate(){
 
-let players = getPlayers();
-let size = 3;
+let players=getPlayers();
+let size=3;
 
-let container = document.getElementById("teams");
-container.innerHTML = "";
+let container=document.getElementById("teams");
+container.innerHTML="";
 
-for(let i=0;i<5;i++){
+for(let i=0;i<17;i++){
 
-let teamPlayers = players.slice(i*size,(i+1)*size);
+let teamPlayers=players.slice(i*size,(i+1)*size);
 
-let html = "";
+let html="";
 
 teamPlayers.forEach(p=>{
-html += `<span class="player">${p}</span>`;
+html+=`<span class="player">${p}</span>`;
 });
 
-container.innerHTML += `
+container.innerHTML+=`
 <div class="team">
 <div class="title">TEAM ${i+1}</div>
 ${html}
 </div>
 `;
-
 }
 
 }
 
-/* CLEAR */
 function clearTeams(){
-document.getElementById("teams").innerHTML = "";
+document.getElementById("teams").innerHTML="";
 }
 
 update();
