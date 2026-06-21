@@ -1,1 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscriptions - Iron x Xtozze</title>
 
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial,sans-serif;
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:red;
+}
+
+.panel{
+background:#111;
+border:2px solid red;
+border-radius:12px;
+padding:20px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+background:#1a1a1a;
+border:1px solid #333;
+color:white;
+border-radius:6px;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+margin:5px;
+}
+
+.stats{
+display:flex;
+gap:15px;
+justify-content:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.stat{
+background:#1a1a1a;
+border:1px solid red;
+padding:10px 20px;
+border-radius:8px;
+}
+
+.player{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1a1a1a;
+padding:10px;
+margin:8px 0;
+border-radius:8px;
+}
+
+.paid{
+background:#0f3b0f;
+border:1px solid #00ff00;
+}
+
+.paid-name{
+color:#00ff00;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>👥 INSCRIPTIONS</h1>
+
+<div class="panel">
+
+<input id="pseudo" placeholder="Pseudo">
+
+<button onclick="addPlayer()">
+➕ Ajouter joueur
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+👥 Inscrits :
+<span id="totalPlayers">0</span>
+</div>
+
+<div class="stat">
+🟢 Payés :
+<span id="paidPlayers">0</span>
+</div>
+
+<div class="stat">
+🔴 Non payés :
+<span id="unpaidPlayers">0</span>
+</div>
+
+</div>
+
+<div class="panel">
+
+<div id="playersList"></div>
+
+</div>
+
+<script>
+
+let players = [];
+
+function addPlayer(){
+
+const input =
+document.getElementById("pseudo");
+
+const name =
+input.value.trim();
+
+if(!name) return;
+
+players.push({
+name:name,
+paid:false
+});
+
+input.value="";
+
+render();
+
+}
+
+function togglePaid(index){
+
+players[index].paid =
+!players[index].paid;
+
+render();
+
+}
+
+function removePlayer(index){
+
+players.splice(index,1);
+
+render();
+
+}
+
+function render(){
+
+const list =
+document.getElementById("playersList");
+
+list.innerHTML="";
+
+let paidCount=0;
+
+players.forEach((player,index)=>{
+
+if(player.paid)
+paidCount++;
+
+list.innerHTML += `
+<div class="player ${player.paid ? 'paid' : ''}">
+
+<span class="${player.paid ? 'paid-name' : ''}">
+${player.name}
+</span>
+
+<div>
+
+<button onclick="togglePaid(${index})">
+${player.paid ? '🟢 PAYÉ' : '⚪ NON PAYÉ'}
+</button>
+
+<button onclick="removePlayer(${index})">
+🗑
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById("totalPlayers").innerText =
+players.length;
+
+document.getElementById("paidPlayers").innerText =
+paidCount;
+
+document.getElementById("unpaidPlayers").innerText =
+players.length - paidCount;
+
+}
+
+</script>
+
+</body>
+</html>
