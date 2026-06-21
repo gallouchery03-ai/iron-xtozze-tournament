@@ -1,13 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iron x Xtozze Tournament</title>
-</head>
-<body style="background:black;color:red;text-align:center;font-family:Arial;">
-<h1>IRON x XTOZZE</h1>
-<h2>WARZONE TOURNAMENTS</h2>
 
-<p>Site en construction 🔥</p>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+}
+
+header{
+height:100vh;
+background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.85));
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+h1{
+font-size:70px;
+color:#ff0000;
+text-shadow:0 0 20px red;
+}
+
+.subtitle{
+font-size:24px;
+margin-top:10px;
+color:#ddd;
+}
+
+.discord-btn{
+display:inline-block;
+margin-top:30px;
+padding:15px 35px;
+background:#ff0000;
+color:white;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+}
+
+section{
+padding:60px 10%;
+}
+
+.title{
+text-align:center;
+font-size:40px;
+color:#ff0000;
+margin-bottom:30px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:#111;
+border:2px solid #ff0000;
+padding:20px;
+border-radius:15px;
+}
+
+.card h3{
+color:#ff0000;
+margin-bottom:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#ff0000;
+padding:12px;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #333;
+text-align:center;
+}
+
+footer{
+padding:30px;
+text-align:center;
+background:#111;
+margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>
+<h1>IRON x XTOZZE</h1>
+<p class="subtitle">WARZONE TOURNAMENTS</p>
+
+<a href="#" class="discord-btn">
+REJOINDRE LE DISCORD
+</a>
+</div>
+</header>
+
+<section>
+<h2 class="title">TOURNOIS</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>🔥 CUSTOM TRIO</h3>
+<p>17 équipes</p>
+<p>Match Point 140 / 150</p>
+</div>
+
+<div class="card">
+<h3>⚔️ CUSTOM DUO</h3>
+<p>Équipes de 2 joueurs</p>
+</div>
+
+<div class="card">
+<h3>🎯 TRIO DRAFT</h3>
+<p>Inscription solo</p>
+<p>16 équipes maximum</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2 class="title">CLASSEMENT GÉNÉRAL</h2>
+
+<table>
+<tr>
+<th>#</th>
+<th>Équipe</th>
+<th>Points</th>
+<th>Kills</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>IRON ALPHA</td>
+<td>150</td>
+<td>90</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>XTOZZE RED</td>
+<td>143</td>
+<td>84</td>
+</tr>
+</table>
+</section>
+
+<section>
+<h2 class="title">MULTIPLICATEUR</h2>
+
+<table>
+<tr>
+<th>Placement</th>
+<th>Multiplicateur</th>
+</tr>
+
+<tr>
+<td>TOP 1</td>
+<td>x1.6</td>
+</tr>
+
+<tr>
+<td>TOP 2 à 5</td>
+<td>x1.4</td>
+</tr>
+
+<tr>
+<td>TOP 6 à 10</td>
+<td>x1.2</td>
+</tr>
+
+<tr>
+<td>TOP 11 à 17</td>
+<td>x1.0</td>
+</tr>
+
+</table>
+</section>
+
+<footer>
+IRON x XTOZZE TOURNAMENT © 2026
+</footer>
 
 </body>
 </html>
