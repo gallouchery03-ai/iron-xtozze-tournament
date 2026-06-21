@@ -2,266 +2,108 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscriptions - Iron x Xtozze</title>
+<title>Inscriptions</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
 background:#050505;
 color:white;
+font-family:Arial;
 padding:20px;
-}
-
-.menu{
-display:flex;
-justify-content:center;
-gap:15px;
-padding:15px;
-margin-bottom:25px;
-background:#111;
-border-bottom:2px solid red;
-}
-
-.menu a{
-text-decoration:none;
-color:white;
-background:#1a1a1a;
-padding:10px 15px;
-border-radius:8px;
-border:1px solid red;
-font-weight:bold;
-}
-
-.menu a:hover{
-background:red;
 }
 
 h1{
 text-align:center;
-color:red;
-margin-bottom:25px;
-}
-
-.panel{
-background:#111;
-border:2px solid red;
-border-radius:15px;
-padding:20px;
-margin-bottom:20px;
+color:#ff3030;
 }
 
 input{
 width:100%;
-padding:12px;
-background:#1a1a1a;
-border:1px solid #333;
-color:white;
-border-radius:8px;
-margin-bottom:10px;
+padding:10px;
+margin:5px 0;
 }
 
 button{
-background:red;
+background:#ff3030;
 color:white;
 border:none;
-padding:10px 15px;
+padding:10px;
+margin:5px;
 border-radius:8px;
 cursor:pointer;
-font-weight:bold;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-bottom:20px;
-}
-
-.stat{
-background:#1a1a1a;
-border:1px solid red;
-padding:15px;
-border-radius:10px;
-text-align:center;
 }
 
 .player{
+background:#111;
+padding:8px;
+margin:5px 0;
+border-radius:8px;
 display:flex;
 justify-content:space-between;
-align-items:center;
-background:#1a1a1a;
-padding:12px;
-margin-bottom:10px;
-border-radius:10px;
 }
-
-.player.paid{
-background:#103010;
-border:1px solid #00ff00;
-}
-
-.player-name{
-font-size:18px;
-}
-
-.player.paid .player-name{
-color:#00ff00;
-font-weight:bold;
-}
-
-.actions button{
-margin-left:5px;
-}
-
 </style>
 </head>
+
 <body>
 
-<nav class="menu">
-<a href="index.html">🏠 Accueil</a>
-<a href="inscriptions.html">👥 Inscriptions</a>
-<a href="switch.html">🎮 Switch</a>
-<a href="classement.html">🏆 Classement</a>
-<a href="topkiller.html">🔥 Top Killer</a>
-</nav>
+<h1>INSCRIPTIONS</h1>
 
-<h1>👥 INSCRIPTIONS</h1>
+<input id="name" placeholder="Pseudo joueur">
 
-<div class="panel">
+<button onclick="addPlayer()">Ajouter</button>
+<button onclick="clearAll()">Reset</button>
 
-<input id="pseudo" placeholder="Pseudo du joueur">
-
-<button onclick="addPlayer()">
-➕ Ajouter joueur
-</button>
-
-</div>
-
-<div class="stats">
-
-<div class="stat">
-👥 Inscrits
-<br><br>
-<span id="totalPlayers">0</span>
-</div>
-
-<div class="stat">
-🟢 Payés
-<br><br>
-<span id="paidPlayers">0</span>
-</div>
-
-<div class="stat">
-🔴 Non payés
-<br><br>
-<span id="unpaidPlayers">0</span>
-</div>
-
-</div>
-
-<div class="panel">
-
-<div id="playersList"></div>
-
-</div>
+<div id="list"></div>
 
 <script>
 
-let players = [];
+let players = JSON.parse(localStorage.getItem("players") || "[]");
+
+function save(){
+localStorage.setItem("players", JSON.stringify(players));
+}
 
 function addPlayer(){
 
-const input =
-document.getElementById("pseudo");
-
-const name =
-input.value.trim();
-
+let name = document.getElementById("name").value;
 if(!name) return;
 
-players.push({
-name:name,
-paid:false
-});
+players.push(name);
+document.getElementById("name").value="";
 
-input.value="";
-
-renderPlayers();
-
+save();
+render();
 }
 
-function togglePaid(index){
-
-players[index].paid =
-!players[index].paid;
-
-renderPlayers();
-
+function removePlayer(i){
+players.splice(i,1);
+save();
+render();
 }
 
-function removePlayer(index){
-
-players.splice(index,1);
-
-renderPlayers();
-
+function clearAll(){
+players = [];
+save();
+render();
 }
 
-function renderPlayers(){
+function render(){
 
-let paid = 0;
+let div = document.getElementById("list");
+div.innerHTML="";
 
-const container =
-document.getElementById("playersList");
-
-container.innerHTML = "";
-
-players.forEach((player,index)=>{
-
-if(player.paid) paid++;
-
-container.innerHTML += `
-<div class="player ${player.paid ? 'paid' : ''}">
-
-<span class="player-name">
-${player.name}
-</span>
-
-<div class="actions">
-
-<button onclick="togglePaid(${index})">
-${player.paid ? '🟢 PAYÉ' : '⚪ NON PAYÉ'}
-</button>
-
-<button onclick="removePlayer(${index})">
-🗑
-</button>
-
-</div>
-
+players.forEach((p,i)=>{
+div.innerHTML += `
+<div class="player">
+${p}
+<button onclick="removePlayer(${i})">X</button>
 </div>
 `;
-
 });
 
-document.getElementById("totalPlayers").innerText =
-players.length;
-
-document.getElementById("paidPlayers").innerText =
-paid;
-
-document.getElementById("unpaidPlayers").innerText =
-players.length - paid;
-
 }
+
+render();
 
 </script>
 
