@@ -7,97 +7,32 @@
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
 background:#050505;
 color:white;
-font-family:Arial,sans-serif;
-max-width:1000px;
-margin:auto;
 padding:20px;
 }
 
-h1{
-text-align:center;
-color:red;
-}
-
-.panel{
-background:#111;
-border:2px solid red;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-background:#1a1a1a;
-border:1px solid #333;
-color:white;
-border-radius:6px;
-}
-
-button{
-background:red;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-margin:5px;
-}
-
-.stats{
-display:flex;
-gap:15px;
-justify-content:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
-
-.stat{
-background:#1a1a1a;
-border:1px solid red;
-padding:10px 20px;
-border-radius:8px;
-}
-
-.player{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#1a1a1a;
-padding:10px;
-margin:8px 0;
-border-radius:8px;
-}
-
-.paid{
-background:#0f3b0f;
-border:1px solid #00ff00;
-}
-
-.paid-name{
-color:#00ff00;
-font-weight:bold;
-}
-
-</style>
-  .menu{
+.menu{
 display:flex;
 justify-content:center;
 gap:15px;
-background:#111;
 padding:15px;
+margin-bottom:25px;
+background:#111;
 border-bottom:2px solid red;
-margin-bottom:20px;
 }
 
 .menu a{
-color:white;
 text-decoration:none;
+color:white;
 background:#1a1a1a;
 padding:10px 15px;
 border-radius:8px;
@@ -108,10 +43,88 @@ font-weight:bold;
 .menu a:hover{
 background:red;
 }
-</head>
 
+h1{
+text-align:center;
+color:red;
+margin-bottom:25px;
+}
+
+.panel{
+background:#111;
+border:2px solid red;
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+background:#1a1a1a;
+border:1px solid #333;
+color:white;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat{
+background:#1a1a1a;
+border:1px solid red;
+padding:15px;
+border-radius:10px;
+text-align:center;
+}
+
+.player{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1a1a1a;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+}
+
+.player.paid{
+background:#103010;
+border:1px solid #00ff00;
+}
+
+.player-name{
+font-size:18px;
+}
+
+.player.paid .player-name{
+color:#00ff00;
+font-weight:bold;
+}
+
+.actions button{
+margin-left:5px;
+}
+
+</style>
+</head>
 <body>
-  
+
 <nav class="menu">
 <a href="index.html">🏠 Accueil</a>
 <a href="inscriptions.html">👥 Inscriptions</a>
@@ -124,7 +137,7 @@ background:red;
 
 <div class="panel">
 
-<input id="pseudo" placeholder="Pseudo">
+<input id="pseudo" placeholder="Pseudo du joueur">
 
 <button onclick="addPlayer()">
 ➕ Ajouter joueur
@@ -135,17 +148,20 @@ background:red;
 <div class="stats">
 
 <div class="stat">
-👥 Inscrits :
+👥 Inscrits
+<br><br>
 <span id="totalPlayers">0</span>
 </div>
 
 <div class="stat">
-🟢 Payés :
+🟢 Payés
+<br><br>
 <span id="paidPlayers">0</span>
 </div>
 
 <div class="stat">
-🔴 Non payés :
+🔴 Non payés
+<br><br>
 <span id="unpaidPlayers">0</span>
 </div>
 
@@ -178,7 +194,7 @@ paid:false
 
 input.value="";
 
-render();
+renderPlayers();
 
 }
 
@@ -187,7 +203,7 @@ function togglePaid(index){
 players[index].paid =
 !players[index].paid;
 
-render();
+renderPlayers();
 
 }
 
@@ -195,32 +211,31 @@ function removePlayer(index){
 
 players.splice(index,1);
 
-render();
+renderPlayers();
 
 }
 
-function render(){
+function renderPlayers(){
 
-const list =
+let paid = 0;
+
+const container =
 document.getElementById("playersList");
 
-list.innerHTML="";
-
-let paidCount=0;
+container.innerHTML = "";
 
 players.forEach((player,index)=>{
 
-if(player.paid)
-paidCount++;
+if(player.paid) paid++;
 
-list.innerHTML += `
+container.innerHTML += `
 <div class="player ${player.paid ? 'paid' : ''}">
 
-<span class="${player.paid ? 'paid-name' : ''}">
+<span class="player-name">
 ${player.name}
 </span>
 
-<div>
+<div class="actions">
 
 <button onclick="togglePaid(${index})">
 ${player.paid ? '🟢 PAYÉ' : '⚪ NON PAYÉ'}
@@ -241,10 +256,10 @@ document.getElementById("totalPlayers").innerText =
 players.length;
 
 document.getElementById("paidPlayers").innerText =
-paidCount;
+paid;
 
 document.getElementById("unpaidPlayers").innerText =
-players.length - paidCount;
+players.length - paid;
 
 }
 
