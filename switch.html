@@ -1,12 +1,12 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Switch - Xtozze x Iron x Madness</title>
+<title>IRON x XTOZZE TOURNOI</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -29,24 +29,24 @@ text-shadow:0 0 15px red;
 
 .top{
 text-align:center;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
 #timer{
-font-size:80px;
+font-size:70px;
 font-weight:bold;
 color:#ff3030;
-margin:15px 0;
+margin:10px 0;
 }
 
 button{
 background:#ff3030;
 color:white;
 border:none;
-padding:10px 15px;
+padding:8px 12px;
 border-radius:8px;
 cursor:pointer;
-margin:4px;
+margin:3px;
 font-weight:bold;
 }
 
@@ -54,54 +54,50 @@ button:hover{
 opacity:.85;
 }
 
-select{
-background:#111;
-color:white;
-border:1px solid #ff3030;
-padding:10px;
-border-radius:8px;
-margin-top:10px;
-}
-
 .teams{
 display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
 }
 
 .team{
 background:#111;
 border:1px solid #ff3030;
-border-radius:10px;
-padding:8px;
-min-height:90px;
+border-radius:8px;
+padding:5px;
+min-height:60px;
 }
 
 .team h3{
 text-align:center;
 color:#ff3030;
-margin-bottom:5px;
-font-size:18px;
+font-size:14px;
+margin-bottom:2px;
 }
 
 .player{
 text-align:center;
-font-size:14px;
-padding:2px;
+font-size:12px;
+padding:1px;
 }
 
-@media(max-width:900px){
+@media(max-width:1000px){
 .teams{
-grid-template-columns:1fr;
+grid-template-columns:repeat(3,1fr);
 }
 }
 
+@media(max-width:700px){
+.teams{
+grid-template-columns:repeat(2,1fr);
+}
+}
 </style>
 </head>
 
 <body>
 
-<h1>🔥 XTOZZE x IRON x MADNESS 🔥</h1>
+<h1>🔥 IRON x XTOZZE TOURNOI 🔥</h1>
 
 <div class="top">
 
@@ -125,21 +121,8 @@ grid-template-columns:1fr;
 
 <br><br>
 
-<select id="teamSize">
-<option value="2">DUO</option>
-<option value="3" selected>TRIO</option>
-<option value="4">QUAD</option>
-</select>
-
-<br><br>
-
-<button onclick="generateTeams()">
-🎲 Générer équipes
-</button>
-
-<button onclick="clearTeams()">
-🗑 Supprimer équipes
-</button>
+<button onclick="generateTeams()">🎲 Générer équipes</button>
+<button onclick="clearTeams()">🗑 Supprimer équipes</button>
 
 </div>
 
@@ -151,57 +134,43 @@ let totalSeconds = 0;
 let interval = null;
 
 function updateTimer(){
-
 const m = Math.floor(totalSeconds/60);
 const s = totalSeconds%60;
 
 document.getElementById("timer").innerText =
 String(m).padStart(2,"0")+":"+
 String(s).padStart(2,"0");
-
 }
 
 function startTimer(){
-
 if(interval) return;
 
 interval = setInterval(()=>{
-
 if(totalSeconds>0){
 totalSeconds--;
 updateTimer();
 }
-
 },1000);
-
 }
 
 function pauseTimer(){
-
 clearInterval(interval);
 interval = null;
-
 }
 
 function resetTimer(){
-
 pauseTimer();
 totalSeconds = 0;
 updateTimer();
-
 }
 
 function addTime(sec){
-
 totalSeconds += sec;
 updateTimer();
-
 }
 
 function clearTeams(){
-
 document.getElementById("teams").innerHTML = "";
-
 }
 
 function generateTeams(){
@@ -211,21 +180,14 @@ document.getElementById("teams");
 
 container.innerHTML = "";
 
-const size =
-parseInt(document.getElementById("teamSize").value);
-
 for(let i=1;i<=17;i++){
-
-let players = "";
-
-for(let j=0;j<size;j++){
-players += '<div class="player">-</div>';
-}
 
 container.innerHTML += `
 <div class="team">
 <h3>TEAM ${i}</h3>
-${players}
+<div class="player">-</div>
+<div class="player">-</div>
+<div class="player">-</div>
 </div>
 `;
 
@@ -240,3 +202,4 @@ generateTeams();
 
 </body>
 </html>
+```
