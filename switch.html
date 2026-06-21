@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWITCH - Iron x Xtozze</title>
 
+<style>
+body{
+background:#050505;
+color:white;
+font-family:Arial,sans-serif;
+margin:0;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:red;
+}
+
+textarea{
+width:100%;
+height:300px;
+background:#111;
+color:white;
+border:2px solid red;
+padding:10px;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:12px 20px;
+margin-top:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#teams{
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 SWITCH</h1>
+
+<p>1 joueur par ligne :</p>
+
+<textarea id="players"></textarea>
+
+<br>
+
+<button onclick="createTeams()">
+Créer les équipes
+</button>
+
+<div id="teams"></div>
+
+<script>
+
+function createTeams(){
+
+let players =
+document.getElementById("players")
+.value
+.split("\n")
+.filter(p => p.trim() !== "");
+
+let html = "";
+
+let team = 1;
+
+for(let i=0;i<players.length;i+=3){
+
+html += `
+<h2 style="color:red;">TEAM ${team}</h2>
+<p>${players[i] || ""}</p>
+<p>${players[i+1] || ""}</p>
+<p>${players[i+2] || ""}</p>
+<hr>
+`;
+
+team++;
+
+}
+
+document.getElementById("teams").innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
