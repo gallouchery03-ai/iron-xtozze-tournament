@@ -3,446 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SWITCH - Tournoi Warzone</title>
-
+<title>SWITCH Warzone</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    background:#0a0a0a;
-    color:white;
-    font-family:Arial,sans-serif;
-    padding:20px;
-}
-
-h1{
-    text-align:center;
-    color:#ff2a2a;
-    margin-bottom:20px;
-}
-
-.main{
-    display:grid;
-    grid-template-columns:350px 400px 1fr;
-    gap:20px;
-}
-
-.card{
-    background:#111;
-    border:2px solid #ff2a2a;
-    border-radius:12px;
-    padding:15px;
-}
-
-h2{
-    color:#ff2a2a;
-    margin-bottom:15px;
-}
-
-input{
-    width:100%;
-    padding:10px;
-    background:#1a1a1a;
-    border:1px solid #333;
-    color:white;
-    border-radius:6px;
-    margin-bottom:10px;
-}
-
-button{
-    background:#ff2a2a;
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:6px;
-    cursor:pointer;
-    margin:3px;
-    font-weight:bold;
-}
-
-button:hover{
-    opacity:.8;
-}
-
-.timer{
-    text-align:center;
-    font-size:90px;
-    font-weight:bold;
-    color:#ff2a2a;
-    margin:20px 0;
-}
-
-.timer-buttons{
-    text-align:center;
-}
-
-.player-list{
-    max-height:700px;
-    overflow:auto;
-}
-
-.player{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px;
-    border-bottom:1px solid #222;
-}
-
-.remove{
-    background:#700;
-}
-
-.teams{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-}
-
-.team{
-    background:#1a1a1a;
-    border:1px solid #ff2a2a;
-    border-radius:8px;
-    padding:10px;
-}
-
-.team h3{
-    color:#ff2a2a;
-    text-align:center;
-    margin-bottom:8px;
-}
-
-.team ul{
-    list-style:none;
-}
-
-.team li{
-    padding:4px;
-    border-bottom:1px solid #222;
-}
-
-.count{
-    margin-top:10px;
-    font-size:18px;
-}
-
-@media(max-width:1400px){
-    .main{
-        grid-template-columns:1fr;
-    }
-
-    .teams{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
-@media(max-width:800px){
-    .teams{
-        grid-template-columns:1fr;
-    }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0b0b;color:#fff;font-family:Arial;padding:15px}
+h1{text-align:center;color:#ff3030;margin-bottom:15px}
+.main{display:grid;grid-template-columns:320px 360px 1fr;gap:15px}
+.panel{background:#111;border:2px solid #ff3030;border-radius:12px;padding:15px;height:650px;overflow:hidden}
+input{width:100%;padding:10px;background:#1c1c1c;color:#fff;border:1px solid #333;border-radius:6px}
+button{background:#ff3030;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin:2px}
+button:hover{opacity:.85}
+.player-list{height:500px;overflow-y:auto;margin-top:10px}
+.player{display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #222}
+.timer{text-align:center;font-size:90px;color:#ff3030;font-weight:bold;height:140px;line-height:140px}
+.center{text-align:center}
+.teams{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;height:560px;overflow-y:auto}
+.team{background:#1b1b1b;border:1px solid #ff3030;border-radius:8px;padding:8px}
+.team h3{text-align:center;color:#ff3030;margin-bottom:5px}
+.teamline{text-align:center;padding:10px}
+.stats{text-align:center;margin-bottom:10px}
 </style>
 </head>
 <body>
 
-<h1>SWITCH - TOURNOI WARZONE</h1>
+<h1>SWITCH WARZONE</h1>
 
 <div class="main">
 
-    <!-- JOUEURS -->
-    <div class="card">
+<div class="panel">
+<h2>Joueurs</h2><br>
+<input id="playerName" placeholder="Nom du joueur" onkeypress="if(event.key==='Enter')addPlayer()">
+<br><br>
+<button onclick="addPlayer()">Ajouter</button>
+<button onclick="copyPlayers()">Copier liste</button>
+<div class="stats">Joueurs : <span id="count">0</span></div>
+<div id="playerList" class="player-list"></div>
+</div>
 
-        <h2>Joueurs</h2>
+<div class="panel">
+<h2 class="center">Timer</h2>
+<div id="timer" class="timer">00:00</div>
+<div class="center">
+<button onclick="addTime(5)">+5s</button>
+<button onclick="addTime(10)">+10s</button>
+<button onclick="addTime(20)">+20s</button>
+<button onclick="addTime(30)">+30s</button><br><br>
+<button onclick="addTime(60)">+1m</button>
+<button onclick="addTime(120)">+2m</button><br><br>
+<button onclick="startTimer()">START</button>
+<button onclick="pauseTimer()">PAUSE</button>
+<button onclick="resetTimer()">RESET</button><br><br>
+<button onclick="generateTeams()">🎲 Générer équipes</button>
+<button onclick="copyTeams()">📋 Copier équipes</button>
+</div>
+</div>
 
-        <input
-            type="text"
-            id="playerName"
-            placeholder="Nom du joueur"
-            onkeypress="if(event.key==='Enter') addPlayer()"
-        >
-
-        <button onclick="addPlayer()">
-            Ajouter Joueur
-        </button>
-
-        <button onclick="generateTeams()">
-            Générer Équipes
-        </button>
-
-        <div class="count">
-            Joueurs : <span id="playerCount">0</span>
-        </div>
-
-        <br>
-
-        <div id="playerList" class="player-list"></div>
-
-    </div>
-
-    <!-- TIMER -->
-    <div class="card">
-
-        <h2 style="text-align:center;">
-            Timer
-        </h2>
-
-        <div id="timer" class="timer">
-            00:00
-        </div>
-
-        <div class="timer-buttons">
-
-            <button onclick="addTime(5)">+5s</button>
-            <button onclick="addTime(10)">+10s</button>
-            <button onclick="addTime(20)">+20s</button>
-            <button onclick="addTime(30)">+30s</button>
-
-            <br><br>
-
-            <button onclick="addTime(60)">+1m</button>
-            <button onclick="addTime(120)">+2m</button>
-
-            <br><br>
-
-            <button onclick="startTimer()">START</button>
-            <button onclick="pauseTimer()">PAUSE</button>
-            <button onclick="resetTimer()">RESET</button>
-
-        </div>
-
-    </div>
-
-    <!-- EQUIPES -->
-    <div class="card">
-
-        <h2>
-            17 Équipes Trio
-        </h2>
-
-        <div id="teamsContainer" class="teams"></div>
-
-    </div>
+<div class="panel">
+<h2>17 Équipes Trio</h2><br>
+<div id="teams" class="teams"></div>
+</div>
 
 </div>
 
 <script>
+let players=JSON.parse(localStorage.getItem('players')||'[]');
+let teamsData=[];
 
-let players = [];
-
-/* ==========================
-   JOUEURS
-========================== */
-
-function addPlayer(){
-
-    const input =
-        document.getElementById("playerName");
-
-    const name =
-        input.value.trim();
-
-    if(name === "") return;
-
-    players.push(name);
-
-    input.value = "";
-
-    renderPlayers();
-}
-
-function removePlayer(index){
-
-    players.splice(index,1);
-
-    renderPlayers();
+function save(){
+localStorage.setItem('players',JSON.stringify(players));
 }
 
 function renderPlayers(){
-
-    const list =
-        document.getElementById("playerList");
-
-    list.innerHTML = "";
-
-    players.forEach((player,index)=>{
-
-        const div =
-            document.createElement("div");
-
-        div.className = "player";
-
-        div.innerHTML = `
-            <span>${player}</span>
-            <button
-                class="remove"
-                onclick="removePlayer(${index})">
-                X
-            </button>
-        `;
-
-        list.appendChild(div);
-
-    });
-
-    document.getElementById("playerCount")
-        .innerText = players.length;
+const box=document.getElementById('playerList');
+box.innerHTML='';
+players.forEach((p,i)=>{
+box.innerHTML+=`<div class="player">${p}<button onclick="removePlayer(${i})">❌</button></div>`;
+});
+document.getElementById('count').textContent=players.length;
+save();
 }
 
-/* ==========================
-   TIMER
-========================== */
-
-let seconds = 0;
-let interval = null;
-
-function updateTimer(){
-
-    const min =
-        Math.floor(seconds / 60);
-
-    const sec =
-        seconds % 60;
-
-    document.getElementById("timer")
-        .innerText =
-        String(min).padStart(2,"0")
-        + ":"
-        + String(sec).padStart(2,"0");
+function addPlayer(){
+const input=document.getElementById('playerName');
+const n=input.value.trim();
+if(!n)return;
+players.push(n);
+input.value='';
+renderPlayers();
 }
 
-function addTime(sec){
-
-    seconds += sec;
-
-    updateTimer();
+function removePlayer(i){
+players.splice(i,1);
+renderPlayers();
 }
 
-function startTimer(){
-
-    if(interval) return;
-
-    interval = setInterval(()=>{
-
-        if(seconds > 0){
-
-            seconds--;
-
-            updateTimer();
-
-        }
-
-    },1000);
+function shuffle(a){
+for(let i=a.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[a[i],a[j]]=[a[j],a[i]];
 }
-
-function pauseTimer(){
-
-    clearInterval(interval);
-
-    interval = null;
-}
-
-function resetTimer(){
-
-    pauseTimer();
-
-    seconds = 0;
-
-    updateTimer();
-}
-
-/* ==========================
-   EQUIPES
-========================== */
-
-function shuffle(array){
-
-    for(let i=array.length-1;i>0;i--){
-
-        const j =
-            Math.floor(
-                Math.random()*(i+1)
-            );
-
-        [array[i],array[j]] =
-        [array[j],array[i]];
-    }
 }
 
 function generateTeams(){
-
-    const container =
-        document.getElementById(
-            "teamsContainer"
-        );
-
-    container.innerHTML = "";
-
-    let shuffled = [...players];
-
-    shuffle(shuffled);
-
-    let teams = [];
-
-    for(let i=0;i<17;i++){
-        teams.push([]);
-    }
-
-    let playerIndex = 0;
-
-    for(let team=0;team<17;team++){
-
-        for(let trio=0;trio<3;trio++){
-
-            if(playerIndex <
-               shuffled.length){
-
-                teams[team].push(
-                    shuffled[playerIndex]
-                );
-
-                playerIndex++;
-            }
-        }
-    }
-
-    teams.forEach((team,index)=>{
-
-        const div =
-            document.createElement("div");
-
-        div.className = "team";
-
-        let html = `
-            <h3>
-                TEAM ${index+1}
-            </h3>
-            <ul>
-        `;
-
-        team.forEach(player=>{
-
-            html += `
-                <li>${player}</li>
-            `;
-
-        });
-
-        html += "</ul>";
-
-        div.innerHTML = html;
-
-        container.appendChild(div);
-
-    });
+let list=[...players];
+shuffle(list);
+teamsData=[];
+for(let i=0;i<17;i++) teamsData.push([]);
+let idx=0;
+for(let t=0;t<17;t++){
+for(let j=0;j<3;j++){
+if(idx<list.length){
+teamsData[t].push(list[idx]);
+idx++;
+}
+}
+}
+renderTeams();
 }
 
+function renderTeams(){
+const box=document.getElementById('teams');
+box.innerHTML='';
+teamsData.forEach((team,i)=>{
+box.innerHTML+=`
+<div class="team">
+<h3>TEAM ${i+1}</h3>
+<div class="center">
+<button onclick="rerollTeam(${i})">🔄</button>
+<button onclick="deleteTeam(${i})">❌</button>
+</div>
+<div class="teamline">${team.join(' x ')}</div>
+</div>`;
+});
+}
+
+function deleteTeam(i){
+teamsData[i]=[];
+renderTeams();
+}
+
+function rerollTeam(i){
+let list=[...players];
+shuffle(list);
+teamsData[i]=list.slice(0,3);
+renderTeams();
+}
+
+function copyTeams(){
+let txt='';
+teamsData.forEach((t,i)=>{
+txt+=`TEAM ${i+1}\n${t.join(' x ')}\n\n`;
+});
+navigator.clipboard.writeText(txt);
+alert('Équipes copiées');
+}
+
+function copyPlayers(){
+navigator.clipboard.writeText(players.join('\\n'));
+alert('Liste copiée');
+}
+
+let seconds=0, interval=null;
+
+function updateTimer(){
+let m=Math.floor(seconds/60);
+let s=seconds%60;
+document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function addTime(x){seconds+=x;updateTimer();}
+function startTimer(){
+if(interval)return;
+interval=setInterval(()=>{
+if(seconds>0){seconds--;updateTimer();}
+},1000);
+}
+function pauseTimer(){clearInterval(interval);interval=null;}
+function resetTimer(){pauseTimer();seconds=0;updateTimer();}
+
+renderPlayers();
 updateTimer();
-
 </script>
-
 </body>
 </html>
