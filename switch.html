@@ -3,215 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SWITCH - Iron x Xtozze</title>
+<title>Switch - Iron x Xtozze</title>
 
 <style>
-
 body{
+margin:0;
 background:#050505;
 color:white;
 font-family:Arial,sans-serif;
-margin:0;
+}
+
+.container{
+display:grid;
+grid-template-columns:300px 1fr 350px;
+gap:20px;
 padding:20px;
 }
 
-h1{
-text-align:center;
-color:#ff0000;
-text-shadow:0 0 15px red;
+.panel{
+background:#111;
+border:2px solid red;
+border-radius:12px;
+padding:15px;
 }
 
-.topbar{
-text-align:center;
-margin-bottom:30px;
+h2{
+color:red;
+margin-top:0;
 }
 
 #timer{
-font-size:70px;
+font-size:60px;
+text-align:center;
+color:red;
 font-weight:bold;
-color:#ff0000;
-margin-bottom:15px;
 }
 
 button{
-background:#ff0000;
+background:red;
 color:white;
 border:none;
-padding:10px 15px;
-margin:5px;
-border-radius:8px;
+padding:8px 12px;
+margin:4px;
+border-radius:6px;
 cursor:pointer;
-font-weight:bold;
-}
-
-button:hover{
-opacity:.85;
-}
-
-.counter{
-text-align:center;
-font-size:22px;
-margin:20px 0;
-}
-
-.team{
-background:#111;
-border:2px solid red;
-border-radius:15px;
-padding:15px;
-margin-bottom:20px;
-}
-
-.team h3{
-margin-top:0;
-color:#ff0000;
 }
 
 input{
 width:100%;
-padding:10px;
-margin:5px 0;
-background:#1b1b1b;
+padding:8px;
+margin:4px 0;
+background:#1a1a1a;
+border:1px solid #333;
 color:white;
-border:1px solid #444;
-border-radius:6px;
 }
 
-.actions{
-text-align:center;
-margin:25px 0;
+.team{
+border:1px solid #333;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
 }
 
+.teams{
+max-height:700px;
+overflow:auto;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🎮 SWITCH</h1>
+<div class="container">
 
-<div class="topbar">
+<!-- JOUEURS -->
+<div class="panel">
 
-<div id="timer">30:00</div>
+<h2>JOUEURS</h2>
 
-<button onclick="startTimer()">▶ PLAY</button>
-<button onclick="pauseTimer()">⏸ PAUSE</button>
-<button onclick="resetTimer()">⏹ STOP</button>
+<input id="playerName" placeholder="Nom du joueur">
+
+<button>Ajouter joueur</button>
+
+<hr>
+
+<div id="playersList">
+
+</div>
+
+</div>
+
+<!-- CENTRE -->
+<div class="panel">
+
+<h2>TIMER</h2>
+
+<div id="timer">00:00</div>
+
+<div style="text-align:center;">
+
+<button>START</button>
+<button>PAUSE</button>
+<button>STOP</button>
 
 <br>
 
-<button onclick="addTime(5)">+5s</button>
-<button onclick="addTime(10)">+10s</button>
-<button onclick="addTime(30)">+30s</button>
-<button onclick="addTime(60)">+1m</button>
-<button onclick="addTime(120)">+2m</button>
+<button>+5s</button>
+<button>+10s</button>
+<button>+20s</button>
+<button>+30s</button>
+
+<br>
+
+<button>+1m</button>
+<button>+2m</button>
 
 </div>
 
-<div class="counter">
-👥 Joueurs inscrits : <span id="count">0</span>
+<hr>
+
+<h2>INFOS</h2>
+
+<p>Inscrits : 0</p>
+<p>Équipes : 17</p>
+<p>Top Killer : -</p>
+<p>Cagnotte : 0 €</p>
+
+<hr>
+
+<button>Créer équipes</button>
+<button>Supprimer équipes</button>
+
 </div>
 
-<div class="actions">
-<button onclick="addTeam()">➕ Ajouter équipe</button>
-<button onclick="removeTeam()">🗑 Supprimer équipe</button>
+<!-- EQUIPES -->
+<div class="panel">
+
+<h2>EQUIPES</h2>
+
+<div class="teams">
+
+<div class="team">
+<h3>TEAM 1</h3>
+<p>-</p>
+<p>-</p>
+<p>-</p>
 </div>
 
-<div id="teams"></div>
+<div class="team">
+<h3>TEAM 2</h3>
+<p>-</p>
+<p>-</p>
+<p>-</p>
+</div>
 
-<script>
+<!-- jusqu'à TEAM 17 -->
 
-let totalSeconds = 1800;
-let timerInterval = null;
+</div>
 
-function updateTimer(){
-let m = Math.floor(totalSeconds/60);
-let s = totalSeconds%60;
+</div>
 
-document.getElementById("timer").innerText =
-String(m).padStart(2,'0') + ":" +
-String(s).padStart(2,'0');
-}
-
-function startTimer(){
-if(timerInterval) return;
-
-timerInterval = setInterval(()=>{
-if(totalSeconds>0){
-totalSeconds--;
-updateTimer();
-}
-},1000);
-}
-
-function pauseTimer(){
-clearInterval(timerInterval);
-timerInterval=null;
-}
-
-function resetTimer(){
-clearInterval(timerInterval);
-timerInterval=null;
-totalSeconds=1800;
-updateTimer();
-}
-
-function addTime(sec){
-totalSeconds += sec;
-updateTimer();
-}
-
-let teamCount = 0;
-
-function addTeam(){
-
-teamCount++;
-
-const div = document.createElement("div");
-
-div.className="team";
-
-div.innerHTML=`
-<h3>TEAM ${teamCount}</h3>
-
-<input placeholder="Joueur 1" oninput="updateCount()">
-<input placeholder="Joueur 2" oninput="updateCount()">
-<input placeholder="Joueur 3" oninput="updateCount()">
-`;
-
-document.getElementById("teams").appendChild(div);
-}
-
-function removeTeam(){
-
-const teams=document.getElementById("teams");
-
-if(teams.lastElementChild){
-teams.removeChild(teams.lastElementChild);
-teamCount--;
-updateCount();
-}
-
-}
-
-function updateCount(){
-
-let total=0;
-
-document.querySelectorAll("input").forEach(input=>{
-if(input.value.trim()!="") total++;
-});
-
-document.getElementById("count").innerText=total;
-
-}
-
-for(let i=0;i<17;i++){
-addTeam();
-}
-
-updateTimer();
-
-</script>
+</div>
 
 </body>
 </html>
