@@ -7,341 +7,437 @@
 
 <style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-background:#0a0a0a;
-font-family:Arial,sans-serif;
-color:white;
-padding:20px;
+    background:#0a0a0a;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
 }
 
 h1{
-text-align:center;
-color:#ff2a2a;
-margin-bottom:20px;
+    text-align:center;
+    color:#ff2a2a;
+    margin-bottom:20px;
 }
 
-.container{
-max-width:1400px;
-margin:auto;
-}
-
-.top{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-margin-bottom:20px;
+.main{
+    display:grid;
+    grid-template-columns:350px 400px 1fr;
+    gap:20px;
 }
 
 .card{
-background:#111;
-border:2px solid #ff2a2a;
-border-radius:10px;
-padding:15px;
-flex:1;
-min-width:300px;
+    background:#111;
+    border:2px solid #ff2a2a;
+    border-radius:12px;
+    padding:15px;
 }
 
-.timer{
-font-size:60px;
-font-weight:bold;
-text-align:center;
-color:#ff2a2a;
-margin:20px 0;
-}
-
-button{
-background:#ff2a2a;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:5px;
-cursor:pointer;
-font-weight:bold;
-margin:3px;
-}
-
-button:hover{
-opacity:0.8;
+h2{
+    color:#ff2a2a;
+    margin-bottom:15px;
 }
 
 input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-background:#1a1a1a;
-border:1px solid #333;
-color:white;
-border-radius:5px;
+    width:100%;
+    padding:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    color:white;
+    border-radius:6px;
+    margin-bottom:10px;
+}
+
+button{
+    background:#ff2a2a;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:6px;
+    cursor:pointer;
+    margin:3px;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:.8;
+}
+
+.timer{
+    text-align:center;
+    font-size:90px;
+    font-weight:bold;
+    color:#ff2a2a;
+    margin:20px 0;
+}
+
+.timer-buttons{
+    text-align:center;
 }
 
 .player-list{
-max-height:300px;
-overflow:auto;
+    max-height:700px;
+    overflow:auto;
 }
 
 .player{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:5px;
-border-bottom:1px solid #222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px;
+    border-bottom:1px solid #222;
+}
+
+.remove{
+    background:#700;
 }
 
 .teams{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
 }
 
 .team{
-background:#111;
-border:2px solid #ff2a2a;
-border-radius:10px;
-padding:10px;
+    background:#1a1a1a;
+    border:1px solid #ff2a2a;
+    border-radius:8px;
+    padding:10px;
 }
 
 .team h3{
-color:#ff2a2a;
-margin-bottom:10px;
-text-align:center;
+    color:#ff2a2a;
+    text-align:center;
+    margin-bottom:8px;
 }
 
 .team ul{
-list-style:none;
+    list-style:none;
 }
 
 .team li{
-padding:5px;
-border-bottom:1px solid #222;
+    padding:4px;
+    border-bottom:1px solid #222;
 }
 
-@media(max-width:900px){
-.teams{
-grid-template-columns:1fr;
+.count{
+    margin-top:10px;
+    font-size:18px;
 }
+
+@media(max-width:1400px){
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    .teams{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:800px){
+    .teams{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-
 <h1>SWITCH - TOURNOI WARZONE</h1>
 
-<div class="top">
+<div class="main">
 
-<div class="card">
-<h2>Timer</h2>
+    <!-- JOUEURS -->
+    <div class="card">
 
-<div class="timer" id="timer">
-00:00
-</div>
+        <h2>Joueurs</h2>
 
-<button onclick="startTimer()">START</button>
-<button onclick="pauseTimer()">PAUSE</button>
-<button onclick="resetTimer()">RESET</button>
+        <input
+            type="text"
+            id="playerName"
+            placeholder="Nom du joueur"
+            onkeypress="if(event.key==='Enter') addPlayer()"
+        >
 
-</div>
+        <button onclick="addPlayer()">
+            Ajouter Joueur
+        </button>
 
-<div class="card">
-<h2>Joueurs</h2>
+        <button onclick="generateTeams()">
+            Générer Équipes
+        </button>
 
-<input type="text" id="playerName" placeholder="Nom du joueur">
+        <div class="count">
+            Joueurs : <span id="playerCount">0</span>
+        </div>
 
-<button onclick="addPlayer()">
-Ajouter Joueur
-</button>
+        <br>
 
-<button onclick="generateTeams()">
-Créer les équipes
-</button>
+        <div id="playerList" class="player-list"></div>
 
-<p style="margin-top:10px;">
-Joueurs : <span id="playerCount">0</span>
-</p>
+    </div>
 
-<div class="player-list" id="playerList"></div>
+    <!-- TIMER -->
+    <div class="card">
 
-</div>
+        <h2 style="text-align:center;">
+            Timer
+        </h2>
 
-</div>
+        <div id="timer" class="timer">
+            00:00
+        </div>
 
-<h2 style="text-align:center;margin-bottom:15px;">
-17 Équipes Trio
-</h2>
+        <div class="timer-buttons">
 
-<div class="teams" id="teamsContainer"></div>
+            <button onclick="addTime(5)">+5s</button>
+            <button onclick="addTime(10)">+10s</button>
+            <button onclick="addTime(20)">+20s</button>
+            <button onclick="addTime(30)">+30s</button>
+
+            <br><br>
+
+            <button onclick="addTime(60)">+1m</button>
+            <button onclick="addTime(120)">+2m</button>
+
+            <br><br>
+
+            <button onclick="startTimer()">START</button>
+            <button onclick="pauseTimer()">PAUSE</button>
+            <button onclick="resetTimer()">RESET</button>
+
+        </div>
+
+    </div>
+
+    <!-- EQUIPES -->
+    <div class="card">
+
+        <h2>
+            17 Équipes Trio
+        </h2>
+
+        <div id="teamsContainer" class="teams"></div>
+
+    </div>
 
 </div>
 
 <script>
+
+let players = [];
+
+/* ==========================
+   JOUEURS
+========================== */
+
+function addPlayer(){
+
+    const input =
+        document.getElementById("playerName");
+
+    const name =
+        input.value.trim();
+
+    if(name === "") return;
+
+    players.push(name);
+
+    input.value = "";
+
+    renderPlayers();
+}
+
+function removePlayer(index){
+
+    players.splice(index,1);
+
+    renderPlayers();
+}
+
+function renderPlayers(){
+
+    const list =
+        document.getElementById("playerList");
+
+    list.innerHTML = "";
+
+    players.forEach((player,index)=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "player";
+
+        div.innerHTML = `
+            <span>${player}</span>
+            <button
+                class="remove"
+                onclick="removePlayer(${index})">
+                X
+            </button>
+        `;
+
+        list.appendChild(div);
+
+    });
+
+    document.getElementById("playerCount")
+        .innerText = players.length;
+}
+
+/* ==========================
+   TIMER
+========================== */
 
 let seconds = 0;
 let interval = null;
 
 function updateTimer(){
 
-let min = Math.floor(seconds / 60);
-let sec = seconds % 60;
+    const min =
+        Math.floor(seconds / 60);
 
-document.getElementById("timer").innerText =
-String(min).padStart(2,"0") + ":" +
-String(sec).padStart(2,"0");
+    const sec =
+        seconds % 60;
 
+    document.getElementById("timer")
+        .innerText =
+        String(min).padStart(2,"0")
+        + ":"
+        + String(sec).padStart(2,"0");
+}
+
+function addTime(sec){
+
+    seconds += sec;
+
+    updateTimer();
 }
 
 function startTimer(){
 
-if(interval) return;
+    if(interval) return;
 
-interval = setInterval(() => {
-seconds++;
-updateTimer();
-},1000);
+    interval = setInterval(()=>{
 
+        if(seconds > 0){
+
+            seconds--;
+
+            updateTimer();
+
+        }
+
+    },1000);
 }
 
 function pauseTimer(){
 
-clearInterval(interval);
-interval = null;
+    clearInterval(interval);
 
+    interval = null;
 }
 
 function resetTimer(){
 
-pauseTimer();
-seconds = 0;
-updateTimer();
+    pauseTimer();
 
+    seconds = 0;
+
+    updateTimer();
 }
 
-let players = [];
-
-function addPlayer(){
-
-const input = document.getElementById("playerName");
-const name = input.value.trim();
-
-if(name === "") return;
-
-players.push(name);
-
-input.value = "";
-
-renderPlayers();
-
-}
-
-function removePlayer(index){
-
-players.splice(index,1);
-
-renderPlayers();
-
-}
-
-function renderPlayers(){
-
-const list = document.getElementById("playerList");
-
-list.innerHTML = "";
-
-players.forEach((player,index)=>{
-
-const div = document.createElement("div");
-
-div.className = "player";
-
-div.innerHTML = `
-<span>${player}</span>
-<button onclick="removePlayer(${index})">
-X
-</button>
-`;
-
-list.appendChild(div);
-
-});
-
-document.getElementById("playerCount").innerText =
-players.length;
-
-}
+/* ==========================
+   EQUIPES
+========================== */
 
 function shuffle(array){
 
-for(let i=array.length-1;i>0;i--){
+    for(let i=array.length-1;i>0;i--){
 
-const j = Math.floor(Math.random()*(i+1));
+        const j =
+            Math.floor(
+                Math.random()*(i+1)
+            );
 
-[array[i],array[j]] =
-[array[j],array[i]];
-
-}
-
+        [array[i],array[j]] =
+        [array[j],array[i]];
+    }
 }
 
 function generateTeams(){
 
-const container =
-document.getElementById("teamsContainer");
+    const container =
+        document.getElementById(
+            "teamsContainer"
+        );
 
-container.innerHTML = "";
+    container.innerHTML = "";
 
-let shuffled = [...players];
+    let shuffled = [...players];
 
-shuffle(shuffled);
+    shuffle(shuffled);
 
-let teams = [];
+    let teams = [];
 
-for(let i=0;i<17;i++){
-teams.push([]);
-}
+    for(let i=0;i<17;i++){
+        teams.push([]);
+    }
 
-let currentTeam = 0;
+    let playerIndex = 0;
 
-shuffled.forEach(player=>{
+    for(let team=0;team<17;team++){
 
-teams[currentTeam].push(player);
+        for(let trio=0;trio<3;trio++){
 
-currentTeam++;
+            if(playerIndex <
+               shuffled.length){
 
-if(currentTeam >= 17){
-currentTeam = 0;
-}
+                teams[team].push(
+                    shuffled[playerIndex]
+                );
 
-});
+                playerIndex++;
+            }
+        }
+    }
 
-teams.forEach((team,index)=>{
+    teams.forEach((team,index)=>{
 
-const div = document.createElement("div");
+        const div =
+            document.createElement("div");
 
-div.className = "team";
+        div.className = "team";
 
-let html = `
-<h3>Équipe ${index+1}</h3>
-<ul>
-`;
+        let html = `
+            <h3>
+                TEAM ${index+1}
+            </h3>
+            <ul>
+        `;
 
-team.forEach(player=>{
-html += `<li>${player}</li>`;
-});
+        team.forEach(player=>{
 
-html += "</ul>";
+            html += `
+                <li>${player}</li>
+            `;
 
-div.innerHTML = html;
+        });
 
-container.appendChild(div);
+        html += "</ul>";
 
-});
+        div.innerHTML = html;
 
+        container.appendChild(div);
+
+    });
 }
 
 updateTimer();
