@@ -181,3 +181,124 @@ padding:4px;
 </div>
 
 <div id="teams" class="teams"></div>
+<script>
+
+let totalSeconds = 0;
+let timerInterval = null;
+
+function updateTimer(){
+
+const minutes =
+Math.floor(totalSeconds / 60);
+
+const seconds =
+totalSeconds % 60;
+
+document.getElementById("timer").innerText =
+String(minutes).padStart(2,"0")
++ ":"
++ String(seconds).padStart(2,"0");
+
+}
+
+function startTimer(){
+
+if(timerInterval) return;
+
+timerInterval = setInterval(()=>{
+
+if(totalSeconds > 0){
+
+totalSeconds--;
+
+updateTimer();
+
+}
+
+},1000);
+
+}
+
+function pauseTimer(){
+
+clearInterval(timerInterval);
+
+timerInterval = null;
+
+}
+
+function resetTimer(){
+
+clearInterval(timerInterval);
+
+timerInterval = null;
+
+totalSeconds = 0;
+
+updateTimer();
+
+}
+
+function addTime(sec){
+
+totalSeconds += sec;
+
+updateTimer();
+
+}
+
+function clearTeams(){
+
+document.getElementById("teams").innerHTML = "";
+
+}
+
+function generateTeams(){
+
+const teamsContainer =
+document.getElementById("teams");
+
+teamsContainer.innerHTML = "";
+
+const teamSize =
+parseInt(
+document.getElementById("teamSize").value
+);
+
+let totalTeams = 17;
+
+for(let i=1;i<=totalTeams;i++){
+
+const team =
+document.createElement("div");
+
+team.className = "team";
+
+let players = "";
+
+for(let j=1;j<=teamSize;j++){
+
+players +=
+`<div class="player">-</div>`;
+
+}
+
+team.innerHTML = `
+<h3>TEAM ${i}</h3>
+${players}
+`;
+
+teamsContainer.appendChild(team);
+
+}
+
+}
+
+updateTimer();
+
+generateTeams();
+
+</script>
+
+</body>
+</html>
