@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Switch - Iron x Xtozze</title>
+<title>Switch - Xtozze x Iron x Madness</title>
 
 <style>
 
@@ -17,64 +17,36 @@ font-family:Arial,sans-serif;
 body{
 background:#050505;
 color:white;
-padding:20px;
-}
-
-.menu{
-display:flex;
-justify-content:center;
-gap:15px;
-margin-bottom:25px;
-}
-
-.menu a{
-text-decoration:none;
-color:white;
-background:#111;
-border:1px solid red;
-padding:10px 15px;
-border-radius:8px;
-font-weight:bold;
-}
-
-.menu a:hover{
-background:red;
-}
-
-.panel{
-border:2px solid red;
-border-radius:15px;
-padding:20px;
-margin-bottom:30px;
-background:#0f0f0f;
+padding:15px;
 }
 
 h1{
 text-align:center;
-color:red;
+color:#ff3030;
 margin-bottom:20px;
+text-shadow:0 0 15px red;
 }
 
-.timer{
-font-size:90px;
+.top{
+text-align:center;
+margin-bottom:25px;
+}
+
+#timer{
+font-size:80px;
 font-weight:bold;
-color:red;
-text-align:center;
-margin:20px 0;
-}
-
-.center{
-text-align:center;
+color:#ff3030;
+margin:15px 0;
 }
 
 button{
-background:red;
+background:#ff3030;
 color:white;
 border:none;
 padding:10px 15px;
-margin:5px;
 border-radius:8px;
 cursor:pointer;
+margin:4px;
 font-weight:bold;
 }
 
@@ -83,10 +55,10 @@ opacity:.85;
 }
 
 select{
-padding:10px;
 background:#111;
 color:white;
-border:1px solid red;
+border:1px solid #ff3030;
+padding:10px;
 border-radius:8px;
 margin-top:10px;
 }
@@ -94,27 +66,34 @@ margin-top:10px;
 .teams{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:30px;
+gap:10px;
 }
 
 .team{
 background:#111;
-border:1px solid red;
-border-radius:12px;
-padding:15px;
-min-height:120px;
+border:1px solid #ff3030;
+border-radius:10px;
+padding:8px;
+min-height:90px;
 }
 
 .team h3{
 text-align:center;
-color:red;
-margin-bottom:10px;
+color:#ff3030;
+margin-bottom:5px;
+font-size:18px;
 }
 
 .player{
 text-align:center;
-padding:4px;
+font-size:14px;
+padding:2px;
+}
+
+@media(max-width:900px){
+.teams{
+grid-template-columns:1fr;
+}
 }
 
 </style>
@@ -122,27 +101,15 @@ padding:4px;
 
 <body>
 
-<nav class="menu">
-<a href="index.html">🏠 Accueil</a>
-<a href="inscriptions.html">👥 Inscriptions</a>
-<a href="switch.html">🎮 Switch</a>
-<a href="classement.html">🏆 Classement</a>
-<a href="topkiller.html">🔥 Top Killer</a>
-</nav>
+<h1>🔥 XTOZZE x IRON x MADNESS 🔥</h1>
 
-<div class="panel">
+<div class="top">
 
-<h1>🎮 SWITCH</h1>
+<div id="timer">00:00</div>
 
-<div id="timer" class="timer">
-00:00
-</div>
-
-<div class="center">
-
-<button onclick="startTimer()">▶ START</button>
-<button onclick="pauseTimer()">⏸ PAUSE</button>
-<button onclick="resetTimer()">⏹ STOP</button>
+<button onclick="startTimer()">START</button>
+<button onclick="pauseTimer()">PAUSE</button>
+<button onclick="resetTimer()">STOP</button>
 
 <br><br>
 
@@ -158,12 +125,10 @@ padding:4px;
 
 <br><br>
 
-<h3>Taille des équipes</h3>
-
 <select id="teamSize">
-<option value="2">Duo</option>
-<option value="3" selected>Trio</option>
-<option value="4">Quad</option>
+<option value="2">DUO</option>
+<option value="3" selected>TRIO</option>
+<option value="4">QUAD</option>
 </select>
 
 <br><br>
@@ -178,41 +143,33 @@ padding:4px;
 
 </div>
 
-</div>
-
 <div id="teams" class="teams"></div>
+
 <script>
 
 let totalSeconds = 0;
-let timerInterval = null;
+let interval = null;
 
 function updateTimer(){
 
-const minutes =
-Math.floor(totalSeconds / 60);
-
-const seconds =
-totalSeconds % 60;
+const m = Math.floor(totalSeconds/60);
+const s = totalSeconds%60;
 
 document.getElementById("timer").innerText =
-String(minutes).padStart(2,"0")
-+ ":"
-+ String(seconds).padStart(2,"0");
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
 
 }
 
 function startTimer(){
 
-if(timerInterval) return;
+if(interval) return;
 
-timerInterval = setInterval(()=>{
+interval = setInterval(()=>{
 
-if(totalSeconds > 0){
-
+if(totalSeconds>0){
 totalSeconds--;
-
 updateTimer();
-
 }
 
 },1000);
@@ -221,20 +178,15 @@ updateTimer();
 
 function pauseTimer(){
 
-clearInterval(timerInterval);
-
-timerInterval = null;
+clearInterval(interval);
+interval = null;
 
 }
 
 function resetTimer(){
 
-clearInterval(timerInterval);
-
-timerInterval = null;
-
+pauseTimer();
 totalSeconds = 0;
-
 updateTimer();
 
 }
@@ -242,7 +194,6 @@ updateTimer();
 function addTime(sec){
 
 totalSeconds += sec;
-
 updateTimer();
 
 }
@@ -255,47 +206,34 @@ document.getElementById("teams").innerHTML = "";
 
 function generateTeams(){
 
-const teamsContainer =
+const container =
 document.getElementById("teams");
 
-teamsContainer.innerHTML = "";
+container.innerHTML = "";
 
-const teamSize =
-parseInt(
-document.getElementById("teamSize").value
-);
+const size =
+parseInt(document.getElementById("teamSize").value);
 
-let totalTeams = 17;
-
-for(let i=1;i<=totalTeams;i++){
-
-const team =
-document.createElement("div");
-
-team.className = "team";
+for(let i=1;i<=17;i++){
 
 let players = "";
 
-for(let j=1;j<=teamSize;j++){
-
-players +=
-`<div class="player">-</div>`;
-
+for(let j=0;j<size;j++){
+players += '<div class="player">-</div>';
 }
 
-team.innerHTML = `
+container.innerHTML += `
+<div class="team">
 <h3>TEAM ${i}</h3>
 ${players}
+</div>
 `;
-
-teamsContainer.appendChild(team);
 
 }
 
 }
 
 updateTimer();
-
 generateTeams();
 
 </script>
