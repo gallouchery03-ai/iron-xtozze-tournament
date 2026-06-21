@@ -2,11 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IRON x XTOZZE TOURNOI</title>
+<title>Switch Tournament</title>
 
 <style>
-
 body{
 background:#050505;
 color:white;
@@ -17,21 +15,13 @@ padding:15px;
 h1{
 text-align:center;
 color:#ff3030;
-text-shadow:0 0 15px red;
-margin-bottom:15px;
 }
 
 #timer{
 text-align:center;
-font-size:70px;
-font-weight:bold;
+font-size:60px;
 color:#ff3030;
-margin:10px 0;
-}
-
-.center{
-text-align:center;
-margin-bottom:15px;
+margin:10px;
 }
 
 button{
@@ -42,31 +32,26 @@ padding:8px 12px;
 margin:3px;
 border-radius:8px;
 cursor:pointer;
-font-weight:bold;
-}
-
-button:hover{
-opacity:0.85;
-}
-
-.teams{
-margin-top:15px;
 }
 
 .team{
 background:#111;
 border:1px solid #ff3030;
-border-radius:8px;
-padding:8px;
+padding:10px;
 margin-bottom:8px;
-font-size:15px;
+border-radius:8px;
 }
 
-.team span{
+.team-title{
 color:#ff3030;
 font-weight:bold;
 }
 
+.player{
+display:inline-block;
+margin-right:10px;
+opacity:0.9;
+}
 </style>
 </head>
 
@@ -76,103 +61,94 @@ font-weight:bold;
 
 <div id="timer">00:00</div>
 
-<div class="center">
-
-<!-- TIMER BUTTONS -->
+<div style="text-align:center;">
 <button onclick="startTimer()">START</button>
 <button onclick="pauseTimer()">PAUSE</button>
 <button onclick="resetTimer()">STOP</button>
+<br>
+<button onclick="addTime(10)">+10s</button>
+<button onclick="addTime(30)">+30s</button>
+<button onclick="addTime(60)">+1m</button>
+</div>
 
 <br>
 
-<button onclick="addTime(5)">+5s</button>
-<button onclick="addTime(10)">+10s</button>
-<button onclick="addTime(20)">+20s</button>
-<button onclick="addTime(30)">+30s</button>
-<button onclick="addTime(60)">+1m</button>
-<button onclick="addTime(120)">+2m</button>
-
-<br><br>
-
-<!-- TEAM BUTTONS -->
-<button onclick="generateTeams()">🎲 Créer équipes</button>
-<button onclick="clearTeams()">🗑 Supprimer équipes</button>
-
-</div>
+<button onclick="generateTeams()">🎲 Générer équipes</button>
 
 <div id="teams"></div>
 
 <script>
 
-let totalSeconds = 0;
-let interval = null;
+let time=0;
+let interval=null;
 
-function updateTimer(){
-
-let m = Math.floor(totalSeconds / 60);
-let s = totalSeconds % 60;
-
-document.getElementById("timer").innerText =
-String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
-
+function update(){
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("timer").innerText=
+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function startTimer(){
-
-if(interval) return;
-
-interval = setInterval(()=>{
-
-if(totalSeconds > 0){
-totalSeconds--;
-updateTimer();
-}
-
+if(interval)return;
+interval=setInterval(()=>{
+if(time>0){time--;update();}
 },1000);
-
 }
 
 function pauseTimer(){
 clearInterval(interval);
-interval = null;
+interval=null;
 }
 
 function resetTimer(){
 pauseTimer();
-totalSeconds = 0;
-updateTimer();
+time=0;
+update();
 }
 
-function addTime(sec){
-totalSeconds += sec;
-updateTimer();
+function addTime(t){
+time+=t;
+update();
 }
 
+/* 🔥 RÉCUP JOUEURS */
+function getPlayers(){
+return JSON.parse(localStorage.getItem("players")||"[]");
+}
+
+/* 🔥 CRÉER ÉQUIPES */
 function generateTeams(){
 
-const container = document.getElementById("teams");
-container.innerHTML = "";
+let players=getPlayers();
 
-for(let i=1;i<=17;i++){
+const container=document.getElementById("teams");
+container.innerHTML="";
 
-container.innerHTML += `
+let teamSize=3;
+let teamCount=Math.ceil(players.length/teamSize);
+
+for(let i=0;i<teamCount;i++){
+
+let teamPlayers=players.slice(i*teamSize,(i+1)*teamSize);
+
+let html="";
+
+teamPlayers.forEach(p=>{
+html+=`<span class="player">${p}</span>`;
+});
+
+container.innerHTML+=`
 <div class="team">
-<span>TEAM ${i}</span>
- | Joueur 1
- | Joueur 2
- | Joueur 3
+<div class="team-title">TEAM ${i+1}</div>
+${html}
 </div>
 `;
-
 }
 
 }
 
-function clearTeams(){
-document.getElementById("teams").innerHTML = "";
-}
-
-updateTimer();
+update();
 
 </script>
 
