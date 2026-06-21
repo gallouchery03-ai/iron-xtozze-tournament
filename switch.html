@@ -68,6 +68,20 @@ font-weight:bold;
 <div class="top">
 
 <div id="timer">00:00</div>
+<div style="text-align:center;margin:10px;">
+<button onclick="startTimer()">START</button>
+<button onclick="pauseTimer()">PAUSE</button>
+<button onclick="resetTimer()">STOP</button>
+</div>
+
+<div style="text-align:center;margin-bottom:10px;">
+<button onclick="addTime(5)">+5s</button>
+<button onclick="addTime(10)">+10s</button>
+<button onclick="addTime(20)">+20s</button>
+<button onclick="addTime(30)">+30s</button>
+<button onclick="addTime(60)">+1m</button>
+<button onclick="addTime(120)">+2m</button>
+</div>
 
 <button onclick="startTimer()">START</button>
 <button onclick="pauseTimer()">PAUSE</button>
