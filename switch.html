@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Switch Tournament</title>
+<title>Switch</title>
 
 <style>
+
 body{
 background:#050505;
 color:white;
@@ -38,21 +39,21 @@ cursor:pointer;
 background:#111;
 border:1px solid #ff3030;
 padding:10px;
-margin-bottom:8px;
+margin:5px 0;
 border-radius:8px;
 }
 
-.team-title{
+.title{
 color:#ff3030;
 font-weight:bold;
 }
 
 .player{
-display:inline-block;
-margin-right:10px;
-opacity:0.9;
+margin-left:10px;
+color:white;
 }
 </style>
+
 </head>
 
 <body>
@@ -62,88 +63,84 @@ opacity:0.9;
 <div id="timer">00:00</div>
 
 <div style="text-align:center;">
-<button onclick="startTimer()">START</button>
-<button onclick="pauseTimer()">PAUSE</button>
-<button onclick="resetTimer()">STOP</button>
+<button onclick="start()">START</button>
+<button onclick="pause()">PAUSE</button>
+<button onclick="reset()">STOP</button>
 <br>
-<button onclick="addTime(10)">+10s</button>
-<button onclick="addTime(30)">+30s</button>
-<button onclick="addTime(60)">+1m</button>
+<button onclick="add(10)">+10s</button>
+<button onclick="add(30)">+30s</button>
+<button onclick="add(60)">+1m</button>
 </div>
 
 <br>
 
-<button onclick="generateTeams()">🎲 Générer équipes</button>
+<button onclick="generate()">GÉNÉRER ÉQUIPES</button>
 
 <div id="teams"></div>
 
 <script>
 
-let time=0;
-let interval=null;
+let t=0, inter=null;
 
 function update(){
-let m=Math.floor(time/60);
-let s=time%60;
+let m=Math.floor(t/60);
+let s=t%60;
 document.getElementById("timer").innerText=
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
-function startTimer(){
-if(interval)return;
-interval=setInterval(()=>{
-if(time>0){time--;update();}
+function start(){
+if(inter) return;
+inter=setInterval(()=>{
+if(t>0){t--;update();}
 },1000);
 }
 
-function pauseTimer(){
-clearInterval(interval);
-interval=null;
+function pause(){
+clearInterval(inter);
+inter=null;
 }
 
-function resetTimer(){
-pauseTimer();
-time=0;
+function reset(){
+pause();
+t=0;
 update();
 }
 
-function addTime(t){
-time+=t;
+function add(x){
+t+=x;
 update();
 }
 
-/* 🔥 RÉCUP JOUEURS */
 function getPlayers(){
 return JSON.parse(localStorage.getItem("players")||"[]");
 }
 
-/* 🔥 CRÉER ÉQUIPES */
-function generateTeams(){
+function generate(){
 
-let players=getPlayers();
+let players = getPlayers();
+let teamSize = 3;
 
-const container=document.getElementById("teams");
+let container = document.getElementById("teams");
 container.innerHTML="";
 
-let teamSize=3;
-let teamCount=Math.ceil(players.length/teamSize);
+for(let i=0;i<players.length;i+=teamSize){
 
-for(let i=0;i<teamCount;i++){
-
-let teamPlayers=players.slice(i*teamSize,(i+1)*teamSize);
+let team = players.slice(i,i+teamSize);
 
 let html="";
 
-teamPlayers.forEach(p=>{
-html+=`<span class="player">${p}</span>`;
+team.forEach(p=>{
+html += `<span class="player">${p}</span>`;
 });
 
-container.innerHTML+=`
+container.innerHTML += `
 <div class="team">
-<div class="team-title">TEAM ${i+1}</div>
+<div class="title">TEAM ${(i/teamSize)+1}</div>
 ${html}
 </div>
 `;
+
 }
 
 }
