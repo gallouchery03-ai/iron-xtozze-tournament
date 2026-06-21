@@ -3,152 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iron x Xtozze Tournament</title>
+
+<title>IRON x XTOZZE TOURNAMENT</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
 
 body{
+margin:0;
+font-family:Arial,sans-serif;
 background:#050505;
 color:white;
+text-align:center;
 }
 
 header{
 height:100vh;
 background:
-linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),
+linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.8)),
 url('f829fe7a-91fe-4a2b-ae15-32dc63c60bf2.png');
 background-size:cover;
 background-position:center;
 display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-text-align:center;
 }
 
 h1{
 font-size:70px;
 color:#ff0000;
 text-shadow:0 0 20px red;
+margin:0;
 }
 
 .subtitle{
-font-size:24px;
-margin-top:10px;
+font-size:25px;
 color:#ddd;
 }
 
-.discord-btn{
-display:inline-block;
-margin-top:30px;
-padding:15px 35px;
-background:#ff0000;
-color:white;
-text-decoration:none;
-font-weight:bold;
-border-radius:10px;
-}
-
 section{
-padding:60px 10%;
-}
-
-.title{
-text-align:center;
-font-size:40px;
-color:#ff0000;
-margin-bottom:30px;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
+padding:50px 20px;
 }
 
 .card{
 background:#111;
-border:2px solid #ff0000;
-padding:20px;
+border:2px solid red;
 border-radius:15px;
+padding:20px;
+margin:20px auto;
+max-width:800px;
 }
 
-.card h3{
-color:#ff0000;
-margin-bottom:10px;
+.title{
+color:red;
+font-size:35px;
+margin-bottom:20px;
+}
+
+button{
+padding:12px 20px;
+margin:5px;
+background:red;
+border:none;
+color:white;
+font-weight:bold;
+cursor:pointer;
+border-radius:8px;
+}
+
+button:hover{
+opacity:.8;
+}
+
+#timer{
+font-size:90px;
+font-weight:bold;
+color:red;
+text-shadow:0 0 20px red;
 }
 
 table{
-width:100%;
+width:90%;
+margin:auto;
 border-collapse:collapse;
-margin-top:20px;
+}
+
+th,td{
+border:1px solid red;
+padding:10px;
 }
 
 th{
-background:#ff0000;
-padding:12px;
-}
-
-td{
-padding:12px;
-border-bottom:1px solid #333;
-text-align:center;
+background:red;
 }
 
 footer{
-padding:30px;
-text-align:center;
-background:#111;
-margin-top:40px;
+padding:20px;
+background:black;
+margin-top:50px;
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
-<div>
 <h1>IRON x XTOZZE</h1>
 <p class="subtitle">WARZONE TOURNAMENTS</p>
-
-<a href="#" class="discord-btn">
-REJOINDRE LE DISCORD
-</a>
-</div>
 </header>
 
 <section>
-<h2 class="title">TOURNOIS</h2>
-
-<div class="cards">
+<h2 class="title">🏆 MODES DE TOURNOI</h2>
 
 <div class="card">
-<h3>🔥 CUSTOM TRIO</h3>
-<p>17 équipes</p>
-<p>Match Point 140 / 150</p>
+<h3>Custom Trio - 17 équipes</h3>
 </div>
 
 <div class="card">
-<h3>⚔️ CUSTOM DUO</h3>
-<p>Équipes de 2 joueurs</p>
+<h3>Custom 2vs2</h3>
+<p>Création d'équipes de 2 joueurs</p>
 </div>
 
 <div class="card">
-<h3>🎯 TRIO DRAFT</h3>
-<p>Inscription solo</p>
-<p>16 équipes maximum</p>
-</div>
-
+<h3>Custom Trio Random</h3>
+<p>Les joueurs s'inscrivent seuls puis les équipes sont créées automatiquement</p>
 </div>
 </section>
 
 <section>
-<h2 class="title">CLASSEMENT GÉNÉRAL</h2>
+<h2 class="title">🎯 MATCH POINT</h2>
+
+<div class="card">
+<p>Match Point : 140 ou 150 points</p>
+<p>Une équipe éligible doit faire TOP 1 pour remporter le tournoi.</p>
+</div>
+</section>
+
+<section>
+<h2 class="title">🔥 MULTIPLICATEUR</h2>
+
+<div class="card">
+<p>TOP 1 = x1.6</p>
+<p>TOP 2 à 5 = x1.4</p>
+<p>TOP 6 à 10 = x1.2</p>
+<p>TOP 11 à 17 = x1</p>
+</div>
+</section>
+
+<section>
+<h2 class="title">⏱ TIMER ORGA</h2>
+
+<div id="timer">00:00</div>
+
+<br>
+
+<button onclick="startTimer()">PLAY</button>
+<button onclick="pauseTimer()">PAUSE</button>
+<button onclick="stopTimer()">STOP</button>
+
+<br><br>
+
+<button onclick="addTime(5)">+5s</button>
+<button onclick="addTime(10)">+10s</button>
+<button onclick="addTime(30)">+30s</button>
+
+<br><br>
+
+<button onclick="addTime(60)">+1m</button>
+<button onclick="addTime(120)">+2m</button>
+
+</section>
+
+<section>
+<h2 class="title">🏆 CLASSEMENT GÉNÉRAL</h2>
 
 <table>
 <tr>
@@ -158,117 +186,75 @@ REJOINDRE LE DISCORD
 <th>Kills</th>
 </tr>
 
-<tr>
-<td>1</td>
-<td>IRON ALPHA</td>
-<td>150</td>
-<td>90</td>
-</tr>
-
-<tr>
-<td>2</td>
-<td>XTOZZE RED</td>
-<td>143</td>
-<td>84</td>
-</tr>
+<tr><td>1</td><td>---</td><td>0</td><td>0</td></tr>
+<tr><td>2</td><td>---</td><td>0</td><td>0</td></tr>
+<tr><td>3</td><td>---</td><td>0</td><td>0</td></tr>
 </table>
 </section>
 
 <section>
-<h2 class="title">MULTIPLICATEUR</h2>
+<h2 class="title">🔥 TOP KILLEURS</h2>
 
 <table>
 <tr>
-<th>Placement</th>
-<th>Multiplicateur</th>
+<th>#</th>
+<th>Joueur</th>
+<th>Kills</th>
 </tr>
 
-<tr>
-<td>TOP 1</td>
-<td>x1.6</td>
-</tr>
-
-<tr>
-<td>TOP 2 à 5</td>
-<td>x1.4</td>
-</tr>
-
-<tr>
-<td>TOP 6 à 10</td>
-<td>x1.2</td>
-</tr>
-
-<tr>
-<td>TOP 11 à 17</td>
-<td>x1.0</td>
-</tr>
-
+<tr><td>1</td><td>---</td><td>0</td></tr>
+<tr><td>2</td><td>---</td><td>0</td></tr>
+<tr><td>3</td><td>---</td><td>0</td></tr>
 </table>
 </section>
+
+<footer>
+IRON x XTOZZE TOURNAMENT © 2026
+</footer>
+
 <script>
 
 let totalSeconds = 0;
 let timerInterval = null;
 
 function updateTimer() {
-
 let minutes = Math.floor(totalSeconds / 60);
 let seconds = totalSeconds % 60;
 
 document.getElementById("timer").innerText =
-String(minutes).padStart(2,'0') +
-":" +
-String(seconds).padStart(2,'0');
-
+String(minutes).padStart(2,"0") + ":" +
+String(seconds).padStart(2,"0");
 }
 
 function startTimer() {
-
 if(timerInterval) return;
 
 timerInterval = setInterval(() => {
-
 totalSeconds++;
-
 updateTimer();
-
 },1000);
-
 }
 
 function pauseTimer() {
-
 clearInterval(timerInterval);
 timerInterval = null;
-
 }
 
 function stopTimer() {
-
 clearInterval(timerInterval);
 timerInterval = null;
-
 totalSeconds = 0;
-
 updateTimer();
-
 }
 
-function addTime(sec) {
-
+function addTime(sec){
 totalSeconds += sec;
-
 updateTimer();
-
 }
 
 updateTimer();
 
 </script>
-  
-<footer>
-IRON x XTOZZE TOURNAMENT © 2026
-</footer>
 
 </body>
 </html>
