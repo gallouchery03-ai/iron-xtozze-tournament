@@ -7,16 +7,10 @@
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
 body{
 background:#050505;
 color:white;
+font-family:Arial;
 padding:15px;
 }
 
@@ -30,8 +24,8 @@ margin-bottom:15px;
 #timer{
 text-align:center;
 font-size:70px;
-color:#ff3030;
 font-weight:bold;
+color:#ff3030;
 margin:10px 0;
 }
 
@@ -84,6 +78,7 @@ font-weight:bold;
 
 <div class="center">
 
+<!-- TIMER BUTTONS -->
 <button onclick="startTimer()">START</button>
 <button onclick="pauseTimer()">PAUSE</button>
 <button onclick="resetTimer()">STOP</button>
@@ -99,7 +94,8 @@ font-weight:bold;
 
 <br><br>
 
-<button onclick="generateTeams()">🎲 Générer équipes</button>
+<!-- TEAM BUTTONS -->
+<button onclick="generateTeams()">🎲 Créer équipes</button>
 <button onclick="clearTeams()">🗑 Supprimer équipes</button>
 
 </div>
@@ -112,22 +108,28 @@ let totalSeconds = 0;
 let interval = null;
 
 function updateTimer(){
+
 let m = Math.floor(totalSeconds / 60);
 let s = totalSeconds % 60;
 
 document.getElementById("timer").innerText =
 String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+
 }
 
 function startTimer(){
+
 if(interval) return;
 
 interval = setInterval(()=>{
+
 if(totalSeconds > 0){
 totalSeconds--;
 updateTimer();
 }
+
 },1000);
+
 }
 
 function pauseTimer(){
