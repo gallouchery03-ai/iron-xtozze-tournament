@@ -138,19 +138,18 @@ updateTimer();
 
 function generateTeams(){
 
-const container =
-document.getElementById("teams");
+const container = document.getElementById("teams");
 
-container.innerHTML="";
+container.innerHTML = "";
 
-for(let i=1;i<=17;i++){
+for(let i = 1; i <= 17; i++){
 
 container.innerHTML += `
 <div class="team">
-<span class="team-name">TEAM ${i}</span>
- | Joueur 1
- | Joueur 2
- | Joueur 3
+<h3>TEAM ${i}</h3>
+<div class="player">-</div>
+<div class="player">-</div>
+<div class="player">-</div>
 </div>
 `;
 
