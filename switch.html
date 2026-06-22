@@ -22,8 +22,8 @@ text-shadow:0 0 10px red;
 #timer{
 text-align:center;
 font-size:60px;
-color:#ff3030;
 font-weight:bold;
+color:#ff3030;
 margin:10px;
 }
 
@@ -46,11 +46,8 @@ button:hover{
 opacity:0.85;
 }
 
-/* 🔥 GRILLE 5 PAR LIGNE */
+/* TEAMS */
 #teams{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:8px;
 margin-top:20px;
 }
 
@@ -58,24 +55,24 @@ margin-top:20px;
 background:#111;
 border:1px solid #ff3030;
 border-radius:8px;
-padding:8px;
-text-align:center;
-font-size:14px;
+padding:10px;
+margin-bottom:8px;
 }
 
 .title{
 color:#ff3030;
 font-weight:bold;
-margin-bottom:4px;
+margin-bottom:5px;
 }
 
 .player{
-display:block;
-font-size:12px;
+display:inline-block;
+margin-right:8px;
 opacity:0.9;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -101,31 +98,31 @@ opacity:0.9;
 <button onclick="generate()">🎲 GÉNÉRER ÉQUIPES</button>
 <button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
 
+<br><br>
+
+<button onclick="sendTest()">💣 TEST GAME → CLASSEMENT</button>
+
 </div>
 
 <div id="teams"></div>
 
 <script>
 
+/* TIMER */
 let time=0;
 let interval=null;
 
-/* TIMER */
 function update(){
 let m=Math.floor(time/60);
 let s=time%60;
-
 document.getElementById("timer").innerText=
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function start(){
-if(interval) return;
+if(interval)return;
 interval=setInterval(()=>{
-if(time>0){
-time--;
-update();
-}
+if(time>0){time--;update();}
 },1000);
 }
 
@@ -150,7 +147,50 @@ function getPlayers(){
 return JSON.parse(localStorage.getItem("players")||"[]");
 }
 
-/* 🔥 GRID TEAMS */
+/* CLASSEMENT STORAGE */
+let classement = JSON.parse(localStorage.getItem("classement")||"{}");
+
+/* SAVE */
+function saveClassement(){
+localStorage.setItem("classement",JSON.stringify(classement));
+}
+
+/* BARÈME WZ */
+function calcPoints(kills,position){
+
+let mult=1;
+
+if(position==1) mult=1.6;
+else if(position<=5) mult=1.4;
+else if(position<=10) mult=1.2;
+
+return Math.round(kills*mult);
+}
+
+/* ADD RESULT */
+function addResult(team,kills,position){
+
+if(!classement[team]){
+classement[team]={M1:0,M2:0,M3:0,M4:0,M5:0,M6:0,M7:0,M8:0,M9:0,M10:0};
+}
+
+let mapCount = Object.keys(classement[team]).length;
+let map="M"+(mapCount+1);
+
+classement[team][map]=calcPoints(kills,position);
+
+saveClassement();
+}
+
+/* TEST */
+function sendTest(){
+addResult("TEAM 1",10,1);
+addResult("TEAM 2",8,4);
+addResult("TEAM 3",5,12);
+alert("Game envoyée au classement !");
+}
+
+/* GENERATE TEAMS */
 function generate(){
 
 let players=getPlayers();
