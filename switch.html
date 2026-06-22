@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>SWITCH FINAL UI</title>
+<title>TOURNOI WARZONE</title>
 
 <style>
 
@@ -42,16 +42,14 @@ cursor:pointer;
 font-weight:bold;
 }
 
-input{
+input,select{
 padding:8px;
 margin:5px;
 border-radius:6px;
 border:none;
-width:120px;
 text-align:center;
 }
 
-/* TEAMS */
 .team{
 background:#111;
 border:1px solid #ff3030;
@@ -63,12 +61,6 @@ border-radius:8px;
 .title{
 color:#ff3030;
 font-weight:bold;
-}
-
-.player{
-display:inline-block;
-margin-right:8px;
-opacity:0.9;
 }
 
 .score{
@@ -103,10 +95,10 @@ font-weight:bold;
 
 <br>
 
-<!-- 🔥 INPUT GAME -->
+<!-- GAME INPUT -->
 <div class="center">
 
-<select id="teamSelect">
+<select id="team">
 <option>TEAM 1</option>
 <option>TEAM 2</option>
 <option>TEAM 3</option>
@@ -115,7 +107,7 @@ font-weight:bold;
 </select>
 
 <input id="kills" type="number" placeholder="Kills">
-<input id="position" type="number" placeholder="Position">
+<input id="pos" type="number" placeholder="Position">
 
 <button onclick="submitGame()">✔ VALIDER GAME</button>
 
@@ -127,10 +119,10 @@ font-weight:bold;
 
 <script>
 
-/* TIMER */
 let time=0;
 let interval=null;
 
+/* TIMER */
 function update(){
 let m=Math.floor(time/60);
 let s=time%60;
@@ -141,10 +133,7 @@ String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 function start(){
 if(interval)return;
 interval=setInterval(()=>{
-if(time>0){
-time--;
-update();
-}
+if(time>0){time--;update();}
 },1000);
 }
 
@@ -159,24 +148,19 @@ time=0;
 update();
 }
 
-function add(sec){
-time+=sec;
+function add(t){
+time+=t;
 update();
 }
 
-/* PLAYERS */
-function getPlayers(){
-return JSON.parse(localStorage.getItem("players")||"[]");
-}
-
-/* CLASSEMENT */
+/* STORAGE */
 let classement = JSON.parse(localStorage.getItem("classement")||"{}");
 
 function save(){
 localStorage.setItem("classement",JSON.stringify(classement));
 }
 
-/* 🔥 BARÈME FINAL */
+/* BARÈME WZ FINAL */
 function calc(kills,pos){
 
 let mult=1;
@@ -189,14 +173,14 @@ else mult=1;
 return Math.round(kills*mult);
 }
 
-/* 🔥 SUBMIT GAME (UI SIMPLE) */
+/* SUBMIT GAME */
 function submitGame(){
 
-let team = document.getElementById("teamSelect").value;
-let kills = Number(document.getElementById("kills").value);
-let pos = Number(document.getElementById("position").value);
+let team=document.getElementById("team").value;
+let kills=Number(document.getElementById("kills").value);
+let pos=Number(document.getElementById("pos").value);
 
-if(!kills || !pos) return alert("Remplis kills + position");
+if(!kills || !pos) return alert("Remplis tout");
 
 if(!classement[team]){
 classement[team]={total:0};
@@ -212,7 +196,7 @@ render();
 
 }
 
-/* TEAMS */
+/* DISPLAY TEAMS */
 function render(){
 
 let container=document.getElementById("teams");
@@ -221,7 +205,7 @@ container.innerHTML="";
 for(let i=1;i<=5;i++){
 
 let team="TEAM "+i;
-let score = classement[team]?.total || 0;
+let score=classement[team]?.total || 0;
 
 container.innerHTML+=`
 <div class="team">
@@ -234,6 +218,7 @@ container.innerHTML+=`
 }
 
 render();
+update();
 
 </script>
 
