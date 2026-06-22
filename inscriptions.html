@@ -5,17 +5,38 @@
 <title>Inscriptions</title>
 
 <style>
-body{background:#050505;color:white;font-family:Arial;padding:20px}
-input,button{padding:10px;margin:5px}
-button{background:red;color:white;border:none;border-radius:6px}
-.player{background:#111;padding:10px;margin:5px;border-radius:6px}
-.paid{color:lime}
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+input,button{
+padding:10px;
+margin:5px;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.player{
+background:#111;
+padding:10px;
+margin:5px;
+border-radius:6px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>👥 INSCRIPTIONS</h1>
+<h1>👥 INSCRIPTIONS JOUEURS</h1>
 
 <input id="name" placeholder="Pseudo">
 <button onclick="add()">Ajouter</button>
@@ -24,7 +45,7 @@ button{background:red;color:white;border:none;border-radius:6px}
 
 <script>
 
-let players=JSON.parse(localStorage.getItem("players")||"[]");
+let players = JSON.parse(localStorage.getItem("players")||"[]");
 
 function save(){
 localStorage.setItem("players",JSON.stringify(players));
@@ -34,13 +55,7 @@ function add(){
 let n=document.getElementById("name").value;
 if(!n)return;
 
-players.push({name:n,paid:false});
-save();
-render();
-}
-
-function pay(i){
-players[i].paid=!players[i].paid;
+players.push({name:n});
 save();
 render();
 }
@@ -49,15 +64,9 @@ function render(){
 let d=document.getElementById("list");
 d.innerHTML="";
 
-players.forEach((p,i)=>{
+players.forEach(p=>{
 d.innerHTML+=`
-<div class="player">
-${p.name}
-<span class="${p.paid?'paid':''}">
-${p.paid?'PAYÉ ✔':'NON PAYÉ'}
-</span>
-<button onclick="pay(${i})">PAYÉ</button>
-</div>
+<div class="player">${p.name}</div>
 `;
 });
 }
