@@ -2,68 +2,83 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Tournoi Dashboard</title>
+<title>Tournoi Pro</title>
 
 <style>
 
 body{
 margin:0;
-background:#0a0a0a;
+background:radial-gradient(circle,#1a0000,#050505);
 color:white;
 font-family:Arial;
 }
 
 header{
-padding:20px;
+padding:25px;
 text-align:center;
-background:#111;
+background:linear-gradient(90deg,#111,#1a0000);
 border-bottom:2px solid red;
+}
+
+header h1{
+margin:0;
+color:#ff3030;
+text-shadow:0 0 10px red;
+}
+
+.menu{
+text-align:center;
+padding:15px;
+}
+
+.menu a{
+color:white;
+text-decoration:none;
+padding:10px 15px;
+margin:5px;
+background:#111;
+border:1px solid red;
+border-radius:8px;
+display:inline-block;
+transition:0.2s;
+}
+
+.menu a:hover{
+background:red;
 }
 
 .cards{
 display:flex;
 justify-content:center;
 gap:15px;
-padding:20px;
 flex-wrap:wrap;
+padding:20px;
 }
 
 .card{
-background:#111;
+background:rgba(0,0,0,0.7);
 border:1px solid red;
-padding:15px;
-border-radius:10px;
-min-width:150px;
+padding:20px;
+border-radius:12px;
+min-width:180px;
 text-align:center;
+box-shadow:0 0 15px rgba(255,0,0,0.2);
 }
 
-a{
-color:white;
-text-decoration:none;
-}
-
-.menu{
-text-align:center;
-margin:10px;
-}
-
-.menu a{
-margin:10px;
-padding:8px 12px;
-background:#111;
-border:1px solid red;
-border-radius:6px;
-display:inline-block;
+.card h3{
+color:#ff3030;
+margin:0;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
-<h1>🔥 TOURNOI WARZONE 🔥</h1>
-<p>Dashboard simple</p>
+<h1>🔥 WARZONE TOURNAMENT HUB 🔥</h1>
+<p>Dashboard Pro Esport</p>
 </header>
 
 <div class="menu">
@@ -74,27 +89,25 @@ display:inline-block;
 <div class="cards">
 
 <div class="card">
-Joueurs
+<h3>Joueurs</h3>
 <div id="players">0</div>
 </div>
 
 <div class="card">
-Teams
+<h3>Teams</h3>
 <div>17</div>
 </div>
 
 <div class="card">
-Status
-<div>LIVE</div>
+<h3>Status</h3>
+<div style="color:lime">LIVE</div>
 </div>
 
 </div>
 
 <script>
-
-let p = JSON.parse(localStorage.getItem("players")||"[]");
-document.getElementById("players").innerText = p.length;
-
+let p=JSON.parse(localStorage.getItem("players")||"[]");
+document.getElementById("players").innerText=p.length;
 </script>
 
 </body>
