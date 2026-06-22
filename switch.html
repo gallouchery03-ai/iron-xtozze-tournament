@@ -46,29 +46,29 @@ button:hover{
 opacity:0.85;
 }
 
-/* TEAMS */
-#teams{
-margin-top:20px;
-}
-
 .team{
 background:#111;
 border:1px solid #ff3030;
-border-radius:8px;
 padding:10px;
 margin-bottom:8px;
+border-radius:8px;
 }
 
 .title{
 color:#ff3030;
 font-weight:bold;
-margin-bottom:5px;
 }
 
 .player{
 display:inline-block;
 margin-right:8px;
 opacity:0.9;
+}
+
+.score{
+float:right;
+color:#00ff00;
+font-weight:bold;
 }
 
 </style>
@@ -98,47 +98,48 @@ opacity:0.9;
 <button onclick="generate()">🎲 GÉNÉRER ÉQUIPES</button>
 <button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
 
-<br><br>
-
-<button onclick="sendTest()">💣 TEST GAME → CLASSEMENT</button>
-
 </div>
+
+<br>
 
 <div id="teams"></div>
 
 <script>
 
 /* TIMER */
-let time=0;
-let interval=null;
+let time = 0;
+let interval = null;
 
 function update(){
-let m=Math.floor(time/60);
-let s=time%60;
-document.getElementById("timer").innerText=
+let m = Math.floor(time/60);
+let s = time%60;
+document.getElementById("timer").innerText =
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function start(){
-if(interval)return;
-interval=setInterval(()=>{
-if(time>0){time--;update();}
+if(interval) return;
+interval = setInterval(()=>{
+if(time>0){
+time--;
+update();
+}
 },1000);
 }
 
 function pause(){
 clearInterval(interval);
-interval=null;
+interval = null;
 }
 
 function reset(){
 pause();
-time=0;
+time = 0;
 update();
 }
 
 function add(sec){
-time+=sec;
+time += sec;
 update();
 }
 
@@ -147,71 +148,64 @@ function getPlayers(){
 return JSON.parse(localStorage.getItem("players")||"[]");
 }
 
-/* CLASSEMENT STORAGE */
+/* CLASSEMENT */
 let classement = JSON.parse(localStorage.getItem("classement")||"{}");
 
-/* SAVE */
-function saveClassement(){
+function save(){
 localStorage.setItem("classement",JSON.stringify(classement));
 }
 
-/* BARÈME WZ */
-function calcPoints(kills,position){
+/* 🔥 TON BARÈME EXACT */
+function calc(kills,position){
 
-let mult=1;
+let mult = 1;
 
-if(position==1) mult=1.6;
-else if(position<=5) mult=1.4;
-else if(position<=10) mult=1.2;
+if(position == 1) mult = 1.6;
+else if(position <= 5) mult = 1.4;
+else if(position <= 10) mult = 1.2;
+else mult = 1;
 
-return Math.round(kills*mult);
+return Math.round(kills * mult);
 }
 
 /* ADD RESULT */
 function addResult(team,kills,position){
 
 if(!classement[team]){
-classement[team]={M1:0,M2:0,M3:0,M4:0,M5:0,M6:0,M7:0,M8:0,M9:0,M10:0};
+classement[team] = {total:0};
 }
 
-let mapCount = Object.keys(classement[team]).length;
-let map="M"+(mapCount+1);
+classement[team].total += calc(kills,position);
 
-classement[team][map]=calcPoints(kills,position);
-
-saveClassement();
-}
-
-/* TEST */
-function sendTest(){
-addResult("TEAM 1",10,1);
-addResult("TEAM 2",8,4);
-addResult("TEAM 3",5,12);
-alert("Game envoyée au classement !");
+save();
 }
 
 /* GENERATE TEAMS */
 function generate(){
 
-let players=getPlayers();
-let size=3;
+let players = getPlayers();
+let size = 3;
 
-let container=document.getElementById("teams");
-container.innerHTML="";
+let container = document.getElementById("teams");
+container.innerHTML = "";
 
-for(let i=0;i<17;i++){
+for(let i=0;i<5;i++){
 
-let teamPlayers=players.slice(i*size,(i+1)*size);
+let teamPlayers = players.slice(i*size,(i+1)*size);
 
-let html="";
+let html = "";
 
 teamPlayers.forEach(p=>{
-html+=`<span class="player">${p}</span>`;
+html += `<span class="player">${p}</span>`;
 });
 
-container.innerHTML+=`
+let score = classement["TEAM "+(i+1)]?.total || 0;
+
+container.innerHTML += `
 <div class="team">
-<div class="title">TEAM ${i+1}</div>
+<span class="title">TEAM ${i+1}</span>
+<span class="score">${score} pts</span>
+<br>
 ${html}
 </div>
 `;
@@ -219,10 +213,12 @@ ${html}
 
 }
 
+/* CLEAR */
 function clearTeams(){
 document.getElementById("teams").innerHTML="";
 }
 
+/* INIT */
 update();
 
 </script>
