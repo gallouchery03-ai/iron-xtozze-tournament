@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>SWITCH TOURNOI</title>
+<title>Switch</title>
 
 <style>
 
@@ -13,40 +13,6 @@ font-family:Arial;
 padding:15px;
 }
 
-h1{
-text-align:center;
-color:#ff3030;
-text-shadow:0 0 10px red;
-}
-
-#timer{
-text-align:center;
-font-size:60px;
-font-weight:bold;
-color:#ff3030;
-margin:10px;
-}
-
-.center{
-text-align:center;
-}
-
-button{
-background:#ff3030;
-color:white;
-border:none;
-padding:8px 12px;
-margin:3px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
-button:hover{
-opacity:0.85;
-}
-
-/* 🔥 GRID 4 PAR LIGNE */
 #teams{
 display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -54,27 +20,17 @@ gap:10px;
 margin-top:20px;
 }
 
-/* TEAM CLEAN */
 .team{
 background:#111;
-border:1px solid #ff3030;
-border-radius:8px;
+border:1px solid red;
 padding:10px;
+border-radius:8px;
 text-align:center;
 }
 
-.team strong{
-color:#ff3030;
-display:block;
-margin-bottom:5px;
-}
+button{background:red;color:white;border:none;padding:8px;margin:3px;border-radius:6px}
 
-.player{
-display:block;
-opacity:0.9;
-font-size:14px;
-margin:2px 0;
-}
+.player{display:block}
 
 </style>
 
@@ -82,94 +38,40 @@ margin:2px 0;
 
 <body>
 
-<h1>🔥 IRON x XTOZZE TOURNOI 🔥</h1>
+<h1>🎮 SWITCH</h1>
 
-<div id="timer">00:00</div>
-
-<div class="center">
-
-<button onclick="start()">START</button>
-<button onclick="pause()">PAUSE</button>
-<button onclick="reset()">STOP</button>
-
-<br>
-
-<button onclick="add(10)">+10s</button>
-<button onclick="add(30)">+30s</button>
-<button onclick="add(60)">+1m</button>
-
-<br><br>
-
-<button onclick="generate()">🎲 CRÉER ÉQUIPES</button>
-<button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
-
-</div>
+<button onclick="generate()">Créer équipes</button>
+<button onclick="clearT()">Reset</button>
 
 <div id="teams"></div>
 
 <script>
 
-/* TIMER */
-let time=0;
-let interval=null;
-
-function update(){
-let m=Math.floor(time/60);
-let s=time%60;
-document.getElementById("timer").innerText=
-String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
-}
-
-function start(){
-if(interval)return;
-interval=setInterval(()=>{
-if(time>0){time--;update();}
-},1000);
-}
-
-function pause(){
-clearInterval(interval);
-interval=null;
-}
-
-function reset(){
-pause();
-time=0;
-update();
-}
-
-function add(sec){
-time+=sec;
-update();
-}
-
-/* PLAYERS */
 function getPlayers(){
-return JSON.parse(localStorage.getItem("players")||"[]");
+return JSON.parse(localStorage.getItem("players")||"[]")
 }
 
-/* 🔥 GENERATE 16 TEAMS CLEAN */
 function generate(){
 
-let players=getPlayers();
+let p=getPlayers();
 let size=3;
 
-let container=document.getElementById("teams");
-container.innerHTML="";
+let d=document.getElementById("teams");
+d.innerHTML="";
 
-for(let i=0;i<16;i++){
+for(let i=0;i<17;i++){
 
-let teamPlayers=players.slice(i*size,(i+1)*size);
+let team=p.slice(i*size,(i+1)*size);
 
 let html="";
 
-teamPlayers.forEach(p=>{
-html+=`<div class="player">${p}</div>`;
+team.forEach(x=>{
+html+=`<span class="player">${x.name}</span>`;
 });
 
-container.innerHTML+=`
+d.innerHTML+=`
 <div class="team">
-<strong>TEAM ${i+1}</strong>
+TEAM ${i+1}
 ${html}
 </div>
 `;
@@ -177,11 +79,9 @@ ${html}
 
 }
 
-function clearTeams(){
+function clearT(){
 document.getElementById("teams").innerHTML="";
 }
-
-update();
 
 </script>
 
