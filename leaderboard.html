@@ -2,185 +2,53 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Leaderboard Pro</title>
+<title>Leaderboard</title>
 
 <style>
-
-body{
-background:#050505;
-color:white;
-font-family:Arial;
-padding:20px;
-}
-
-h1{
-text-align:center;
-color:#ff3030;
-text-shadow:0 0 10px red;
-margin-bottom:20px;
-}
-
-/* 🏆 PODIUM */
-.podium{
-display:flex;
-justify-content:center;
-gap:20px;
-margin-bottom:30px;
-}
-
-.box{
-background:#111;
-border:2px solid #ff3030;
-padding:15px;
-width:150px;
-text-align:center;
-border-radius:10px;
-}
-
-.first{
-border-color:#ffd700;
-color:#ffd700;
-transform:scale(1.1);
-}
-
-.second{
-border-color:#c0c0c0;
-color:#c0c0c0;
-}
-
-.third{
-border-color:#cd7f32;
-color:#cd7f32;
-}
-
-/* TABLE */
-table{
-width:100%;
-border-collapse:collapse;
-text-align:center;
-}
-
-th,td{
-border:1px solid #ff3030;
-padding:10px;
-}
-
-th{
-background:#111;
-color:#ff3030;
-}
-
-td{
-background:#0f0f0f;
-}
-
-.rank{
-font-weight:bold;
-}
-
-.gold{color:#ffd700;}
-.silver{color:#c0c0c0;}
-.bronze{color:#cd7f32;}
-
-.total{
-font-weight:bold;
-color:#00ff00;
-}
-
+body{background:#050505;color:white;font-family:Arial;padding:20px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid red;padding:8px;text-align:center}
+th{background:#111}
 </style>
 
 </head>
 
 <body>
 
-<h1>🏆 LIVE LEADERBOARD</h1>
-
-<div class="podium" id="podium"></div>
+<h1>🏆 LEADERBOARD</h1>
 
 <table>
-<thead>
-<tr>
-<th>RANK</th>
-<th>TEAM</th>
-<th>POINTS</th>
-</tr>
-</thead>
-
-<tbody id="board"></tbody>
+<tr><th>TEAM</th><th>POINTS</th></tr>
+<tbody id="t"></tbody>
 </table>
 
 <script>
 
-let data = JSON.parse(localStorage.getItem("classement") || "{}");
+let data=JSON.parse(localStorage.getItem("classement")||"{}");
 
-function getTotal(team){
-if(!data[team]) return 0;
-let t = 0;
-Object.values(data[team]).forEach(v=>{
-t += Number(v);
-});
-return t;
+function get(team){
+return data[team]?.total||0;
 }
 
-function build(){
+function load(){
 
-let teams = [];
+let t=document.getElementById("t");
+t.innerHTML="";
 
 for(let i=1;i<=17;i++){
-teams.push({
-name:"TEAM "+i,
-score:getTotal("TEAM "+i)
-});
-}
-
-teams.sort((a,b)=>b.score-a.score);
-
-/* 🏆 PODIUM */
-let podium = document.getElementById("podium");
-
-podium.innerHTML = `
-<div class="box second">
-🥈<br>${teams[1]?.name || ""}<br>${teams[1]?.score || 0}
-</div>
-
-<div class="box first">
-🥇<br>${teams[0]?.name || ""}<br>${teams[0]?.score || 0}
-</div>
-
-<div class="box third">
-🥉<br>${teams[2]?.name || ""}<br>${teams[2]?.score || 0}
-</div>
-`;
-
-/* TABLE */
-let html = "";
-
-teams.forEach((t,i)=>{
-
-let color = "";
-
-if(i==0) color="gold";
-if(i==1) color="silver";
-if(i==2) color="bronze";
-
-html += `
+t.innerHTML+=`
 <tr>
-<td class="rank ${color}">#${i+1}</td>
-<td>${t.name}</td>
-<td class="total">${t.score}</td>
+<td>TEAM ${i}</td>
+<td>${get("TEAM "+i)}</td>
 </tr>
 `;
-
-});
-
-document.getElementById("board").innerHTML = html;
+}
 
 }
 
-build();
+load();
 
-/* LIVE UPDATE */
-setInterval(build,1500);
+setInterval(load,2000);
 
 </script>
 
