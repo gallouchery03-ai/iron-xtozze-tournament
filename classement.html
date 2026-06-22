@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Classement Tournoi</title>
 
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:15px;
+}
+
+h1{
+text-align:center;
+color:#ff3030;
+text-shadow:0 0 10px red;
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+text-align:center;
+}
+
+th,td{
+border:1px solid #ff3030;
+padding:8px;
+}
+
+th{
+background:#111;
+color:#ff3030;
+}
+
+td{
+background:#0f0f0f;
+}
+
+.total{
+color:#00ff00;
+font-weight:bold;
+}
+
+button{
+background:#ff3030;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+margin:2px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏆 CLASSEMENT TOURNOI</h1>
+
+<table id="table">
+
+<thead>
+<tr>
+<th>TEAM</th>
+<th>M1</th>
+<th>M2</th>
+<th>M3</th>
+<th>M4</th>
+<th>M5</th>
+<th>M6</th>
+<th>M7</th>
+<th>M8</th>
+<th>M9</th>
+<th>M10</th>
+<th>TOTAL</th>
+</tr>
+</thead>
+
+<tbody id="body"></tbody>
+
+</table>
+
+<script>
+
+let teams = 17;
+let data = JSON.parse(localStorage.getItem("classement") || "{}");
+
+function save(){
+localStorage.setItem("classement", JSON.stringify(data));
+}
+
+function get(team, map){
+if(!data[team]) data[team] = {};
+return data[team][map] || 0;
+}
+
+function set(team, map, value){
+if(!data[team]) data[team] = {};
+data[team][map] = Number(value);
+save();
+render();
+}
+
+function total(team){
+let t = 0;
+for(let i=1;i<=10;i++){
+t += get(team,"M"+i);
+}
+return t;
+}
+
+function render(){
+
+let body = document.getElementById("body");
+body.innerHTML = "";
+
+for(let i=1;i<=teams;i++){
+
+let row = `<tr>
+<td>TEAM ${i}</td>`;
+
+for(let m=1;m<=10;m++){
+row += `<td>
+<input type="number"
+value="${get("TEAM"+i,"M"+m)}"
+onchange="set('TEAM${i}','M${m}',this.value)"
+style="width:60px;background:#111;color:white;border:1px solid #ff3030;text-align:center;">
+</td>`;
+}
+
+row += `<td class="total">${total("TEAM"+i)}</td></tr>`;
+
+body.innerHTML += row;
+}
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
