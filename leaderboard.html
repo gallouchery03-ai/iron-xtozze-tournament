@@ -2,53 +2,107 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Leaderboard</title>
+<title>Classement Tournoi</title>
 
 <style>
-body{background:#050505;color:white;font-family:Arial;padding:20px}
-table{width:100%;border-collapse:collapse}
-td,th{border:1px solid red;padding:8px;text-align:center}
-th{background:#111}
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:#ff3030;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid red;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#111;
+color:#ff3030;
+}
+
+.players{
+color:#ccc;
+font-size:13px;
+}
+
+.score{
+color:#00ff00;
+font-weight:bold;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h1>🏆 LEADERBOARD</h1>
+<h1>🏆 CLASSEMENT TOURNOI</h1>
 
 <table>
-<tr><th>TEAM</th><th>POINTS</th></tr>
-<tbody id="t"></tbody>
+
+<tr>
+<th>TEAM</th>
+<th>JOUEURS</th>
+<th>POINTS</th>
+</tr>
+
+<tbody id="board"></tbody>
+
 </table>
 
 <script>
 
-let data=JSON.parse(localStorage.getItem("classement")||"{}");
+let players = JSON.parse(localStorage.getItem("players") || "[]");
+let classement = JSON.parse(localStorage.getItem("classement") || "{}");
 
-function get(team){
-return data[team]?.total||0;
+function getTeamPlayers(i){
+let size=3;
+let start=(i-1)*size;
+return players.slice(start,start+size);
 }
 
-function load(){
+function getScore(team){
+return classement[team]?.total || 0;
+}
 
-let t=document.getElementById("t");
-t.innerHTML="";
+function render(){
+
+let b=document.getElementById("board");
+b.innerHTML="";
 
 for(let i=1;i<=17;i++){
-t.innerHTML+=`
+
+let p = getTeamPlayers(i).map(x=>x.name || x).join(" / ");
+
+b.innerHTML+=`
 <tr>
 <td>TEAM ${i}</td>
-<td>${get("TEAM "+i)}</td>
+<td class="players">${p}</td>
+<td class="score">${getScore("TEAM "+i)}</td>
 </tr>
 `;
 }
 
 }
 
-load();
+render();
 
-setInterval(load,2000);
+setInterval(render,2000);
 
 </script>
 
