@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Leaderboard</title>
 
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:15px;
+}
+
+h1{
+text-align:center;
+color:#ff3030;
+text-shadow:0 0 10px red;
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+text-align:center;
+}
+
+th,td{
+border:1px solid #ff3030;
+padding:8px;
+}
+
+th{
+background:#111;
+color:#ff3030;
+}
+
+td{
+background:#0f0f0f;
+}
+
+.rank{
+font-weight:bold;
+color:#00ff00;
+}
+
+.total{
+font-weight:bold;
+color:#ffcc00;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏆 LIVE LEADERBOARD</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>RANK</th>
+<th>TEAM</th>
+<th>TOTAL POINTS</th>
+</tr>
+</thead>
+
+<tbody id="board"></tbody>
+
+</table>
+
+<script>
+
+/* 🔥 RECUP CLASSEMENT */
+let data = JSON.parse(localStorage.getItem("classement") || "{}");
+
+/* TOTAL TEAM */
+function getTotal(team){
+let t = 0;
+
+if(!data[team]) return 0;
+
+Object.values(data[team]).forEach(v=>{
+t += Number(v);
+});
+
+return t;
+}
+
+/* SORT TEAMS */
+function build(){
+
+let teams = [];
+
+for(let i=1;i<=17;i++){
+
+teams.push({
+name:"TEAM "+i,
+score:getTotal("TEAM "+i)
+});
+
+}
+
+/* TRI */
+teams.sort((a,b)=>b.score-a.score);
+
+let html = "";
+
+teams.forEach((t,i)=>{
+
+html += `
+<tr>
+<td class="rank">#${i+1}</td>
+<td>${t.name}</td>
+<td class="total">${t.score}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("board").innerHTML = html;
+
+}
+
+build();
+
+setInterval(build,2000);
+
+</script>
+
+</body>
+</html>
