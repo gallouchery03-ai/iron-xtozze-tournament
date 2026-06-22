@@ -2,162 +2,64 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Inscriptions Tournoi</title>
+<title>Inscriptions</title>
 
 <style>
-
-body{
-background:#050505;
-color:white;
-font-family:Arial;
-padding:20px;
-}
-
-h1{
-text-align:center;
-color:#ff3030;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:6px;
-border:none;
-}
-
-button{
-background:#ff3030;
-color:white;
-border:none;
-padding:10px;
-margin:5px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.player{
-background:#111;
-padding:10px;
-margin:5px 0;
-border-radius:8px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.paid{
-color:#00ff00;
-font-weight:bold;
-}
-
-.notpaid{
-color:#ffcc00;
-}
-
-.money{
-text-align:center;
-margin:10px;
-font-size:18px;
-color:#00ff00;
-}
-
+body{background:#050505;color:white;font-family:Arial;padding:20px}
+input,button{padding:10px;margin:5px}
+button{background:red;color:white;border:none;border-radius:6px}
+.player{background:#111;padding:10px;margin:5px;border-radius:6px}
+.paid{color:lime}
 </style>
-
 </head>
 
 <body>
 
-<h1>👥 INSCRIPTIONS TOURNOI</h1>
+<h1>👥 INSCRIPTIONS</h1>
 
-<div class="money">
-💰 Entrée : 10€ / joueur
-</div>
-
-<input id="name" placeholder="Pseudo joueur">
-
-<button onclick="addPlayer()">➕ Ajouter joueur</button>
-<button onclick="clearAll()">🗑 Reset</button>
+<input id="name" placeholder="Pseudo">
+<button onclick="add()">Ajouter</button>
 
 <div id="list"></div>
 
 <script>
 
-let players = JSON.parse(localStorage.getItem("players") || "[]");
+let players=JSON.parse(localStorage.getItem("players")||"[]");
 
-/* SAVE */
 function save(){
-localStorage.setItem("players", JSON.stringify(players));
+localStorage.setItem("players",JSON.stringify(players));
 }
 
-/* ADD PLAYER */
-function addPlayer(){
+function add(){
+let n=document.getElementById("name").value;
+if(!n)return;
 
-let name = document.getElementById("name").value;
-if(!name) return;
-
-players.push({
-name:name,
-paid:false
-});
-
-document.getElementById("name").value="";
-
+players.push({name:n,paid:false});
 save();
 render();
 }
 
-/* TOGGLE PAY */
-function togglePay(i){
-players[i].paid = !players[i].paid;
+function pay(i){
+players[i].paid=!players[i].paid;
 save();
 render();
 }
 
-/* REMOVE */
-function removePlayer(i){
-players.splice(i,1);
-save();
-render();
-}
-
-/* CLEAR */
-function clearAll(){
-players = [];
-save();
-render();
-}
-
-/* RENDER */
 function render(){
-
-let div = document.getElementById("list");
-div.innerHTML="";
+let d=document.getElementById("list");
+d.innerHTML="";
 
 players.forEach((p,i)=>{
-
-div.innerHTML += `
+d.innerHTML+=`
 <div class="player">
-
-<div>
 ${p.name}
-<br>
-<span class="${p.paid ? 'paid' : 'notpaid'}">
-${p.paid ? 'PAYÉ ✔ (10€)' : 'NON PAYÉ ❌'}
+<span class="${p.paid?'paid':''}">
+${p.paid?'PAYÉ ✔':'NON PAYÉ'}
 </span>
-</div>
-
-<div>
-<button onclick="togglePay(${i})">PAYÉ</button>
-<button onclick="removePlayer(${i})">X</button>
-</div>
-
+<button onclick="pay(${i})">PAYÉ</button>
 </div>
 `;
-
 });
-
 }
 
 render();
