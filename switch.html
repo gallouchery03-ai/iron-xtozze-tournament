@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>TOURNOI WARZONE</title>
+<title>SWITCH TOURNOI</title>
 
 <style>
 
@@ -42,12 +42,8 @@ cursor:pointer;
 font-weight:bold;
 }
 
-input,select{
-padding:8px;
-margin:5px;
-border-radius:6px;
-border:none;
-text-align:center;
+button:hover{
+opacity:0.85;
 }
 
 .team{
@@ -61,6 +57,12 @@ border-radius:8px;
 .title{
 color:#ff3030;
 font-weight:bold;
+}
+
+.player{
+display:inline-block;
+margin-right:8px;
+opacity:0.9;
 }
 
 .score{
@@ -81,6 +83,7 @@ font-weight:bold;
 
 <div class="center">
 
+<!-- TIMER -->
 <button onclick="start()">START</button>
 <button onclick="pause()">PAUSE</button>
 <button onclick="reset()">STOP</button>
@@ -91,37 +94,11 @@ font-weight:bold;
 <button onclick="add(30)">+30s</button>
 <button onclick="add(60)">+1m</button>
 
-</div>
+<br><br>
 
-<br>
-
-<!-- GAME INPUT -->
-<div class="center">
-
-<select id="team">
-<option>TEAM 1</option>
-<option>TEAM 2</option>
-<option>TEAM 3</option>
-<option>TEAM 4</option>
-<option>TEAM 5</option>
-<option>TEAM 6</option>
-<option>TEAM 7</option>
-<option>TEAM 8</option>
-<option>TEAM 9</option>
-<option>TEAM 10</option>
-<option>TEAM 11</option>
-<option>TEAM 12</option>
-<option>TEAM 13</option>
-<option>TEAM 14</option>
-<option>TEAM 15</option>
-<option>TEAM 16</option>
-<option>TEAM 17</option>
-</select>
-
-<input id="kills" type="number" placeholder="Kills">
-<input id="pos" type="number" placeholder="Position">
-
-<button onclick="submitGame()">✔ VALIDER GAME</button>
+<!-- TEAM BUTTONS -->
+<button onclick="generate()">🎲 CRÉER ÉQUIPES</button>
+<button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
 
 </div>
 
@@ -131,10 +108,10 @@ font-weight:bold;
 
 <script>
 
+/* TIMER */
 let time=0;
 let interval=null;
 
-/* TIMER */
 function update(){
 let m=Math.floor(time/60);
 let s=time%60;
@@ -145,7 +122,10 @@ String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 function start(){
 if(interval)return;
 interval=setInterval(()=>{
-if(time>0){time--;update();}
+if(time>0){
+time--;
+update();
+}
 },1000);
 }
 
@@ -160,19 +140,24 @@ time=0;
 update();
 }
 
-function add(t){
-time+=t;
+function add(sec){
+time+=sec;
 update();
 }
 
-/* STORAGE */
+/* PLAYERS */
+function getPlayers(){
+return JSON.parse(localStorage.getItem("players")||"[]");
+}
+
+/* CLASSEMENT */
 let classement = JSON.parse(localStorage.getItem("classement")||"{}");
 
 function save(){
 localStorage.setItem("classement",JSON.stringify(classement));
 }
 
-/* BARÈME WZ FINAL */
+/* BARÈME WZ */
 function calc(kills,pos){
 
 let mult=1;
@@ -185,14 +170,8 @@ else mult=1;
 return Math.round(kills*mult);
 }
 
-/* SUBMIT GAME */
-function submitGame(){
-
-let team=document.getElementById("team").value;
-let kills=Number(document.getElementById("kills").value);
-let pos=Number(document.getElementById("pos").value);
-
-if(!kills || !pos) return alert("Remplis tout");
+/* ADD RESULT (option future) */
+function addResult(team,kills,pos){
 
 if(!classement[team]){
 classement[team]={total:0};
@@ -201,35 +180,47 @@ classement[team]={total:0};
 classement[team].total += calc(kills,pos);
 
 save();
-
-alert("GAME VALIDÉE ✔");
-
-render();
-
 }
 
-/* DISPLAY TEAMS */
-function render(){
+/* GENERATE 17 TEAMS */
+function generate(){
+
+let players=getPlayers();
+let size=3;
 
 let container=document.getElementById("teams");
 container.innerHTML="";
 
-for(let i=1;i<=5;i++){
+for(let i=1;i<=17;i++){
 
-let team="TEAM "+i;
-let score=classement[team]?.total || 0;
+let teamPlayers=players.slice((i-1)*size,i*size);
+
+let html="";
+
+teamPlayers.forEach(p=>{
+html+=`<span class="player">${p}</span>`;
+});
+
+let score = classement["TEAM "+i]?.total || 0;
 
 container.innerHTML+=`
 <div class="team">
-<span class="title">${team}</span>
+<span class="title">TEAM ${i}</span>
 <span class="score">${score} pts</span>
+<br>
+${html}
 </div>
 `;
 }
 
 }
 
-render();
+/* CLEAR */
+function clearTeams(){
+document.getElementById("teams").innerHTML="";
+}
+
+/* INIT */
 update();
 
 </script>
