@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>TOURNOI WZ SWITCH</title>
+<title>SWITCH TOURNOI</title>
 
 <style>
 
@@ -19,7 +19,6 @@ color:#ff3030;
 text-shadow:0 0 10px red;
 }
 
-/* TIMER */
 #timer{
 text-align:center;
 font-size:60px;
@@ -32,7 +31,6 @@ margin:10px;
 text-align:center;
 }
 
-/* BUTTONS */
 button{
 background:#ff3030;
 color:white;
@@ -48,53 +46,34 @@ button:hover{
 opacity:0.85;
 }
 
-/* INFO TABLE */
-.info{
-margin:20px auto;
-text-align:center;
+/* 🔥 GRID 4 PAR LIGNE */
+#teams{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:20px;
 }
 
-#stats{
-display:flex;
-justify-content:center;
-gap:20px;
-margin-top:10px;
-flex-wrap:wrap;
-}
-
-.box{
-background:#111;
-border:1px solid red;
-padding:10px 15px;
-border-radius:8px;
-min-width:150px;
-font-weight:bold;
-}
-
-/* TEAMS */
+/* TEAM CLEAN */
 .team{
 background:#111;
 border:1px solid #ff3030;
-padding:10px;
-margin-bottom:8px;
 border-radius:8px;
+padding:10px;
+text-align:center;
 }
 
-.title{
+.team strong{
 color:#ff3030;
-font-weight:bold;
+display:block;
+margin-bottom:5px;
 }
 
 .player{
-display:inline-block;
-margin-right:8px;
+display:block;
 opacity:0.9;
-}
-
-.score{
-float:right;
-color:#00ff00;
-font-weight:bold;
+font-size:14px;
+margin:2px 0;
 }
 
 </style>
@@ -125,31 +104,6 @@ font-weight:bold;
 <button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
 
 </div>
-
-<!-- 💣 TABLE CASHPRIZE -->
-<div class="info">
-
-<h2>📊 INFORMATIONS TOURNOI</h2>
-
-<div id="stats">
-
-<div class="box">
-👥 INSCRITS : <span id="countPlayers">0</span>
-</div>
-
-<div class="box">
-💰 ENTRÉE (10€) : <span id="entryMoney">0€</span>
-</div>
-
-<div class="box">
-🏆 PRIZEPOOL : <span id="prizePool">0€</span>
-</div>
-
-</div>
-
-</div>
-
-<br>
 
 <div id="teams"></div>
 
@@ -194,39 +148,7 @@ function getPlayers(){
 return JSON.parse(localStorage.getItem("players")||"[]");
 }
 
-/* CLASSEMENT */
-let classement = JSON.parse(localStorage.getItem("classement")||"{}");
-
-function save(){
-localStorage.setItem("classement",JSON.stringify(classement));
-}
-
-/* BARÈME WZ */
-function calc(kills,pos){
-
-let mult=1;
-
-if(pos==1) mult=1.6;
-else if(pos<=5) mult=1.4;
-else if(pos<=10) mult=1.2;
-else mult=1;
-
-return Math.round(kills*mult);
-}
-
-/* RESULT */
-function addResult(team,kills,pos){
-
-if(!classement[team]){
-classement[team]={total:0};
-}
-
-classement[team].total += calc(kills,pos);
-
-save();
-}
-
-/* GENERATE 17 TEAMS */
+/* 🔥 GENERATE 16 TEAMS CLEAN */
 function generate(){
 
 let players=getPlayers();
@@ -235,23 +157,19 @@ let size=3;
 let container=document.getElementById("teams");
 container.innerHTML="";
 
-for(let i=1;i<=17;i++){
+for(let i=0;i<16;i++){
 
-let teamPlayers=players.slice((i-1)*size,i*size);
+let teamPlayers=players.slice(i*size,(i+1)*size);
 
 let html="";
 
 teamPlayers.forEach(p=>{
-html+=`<span class="player">${p}</span>`;
+html+=`<div class="player">${p}</div>`;
 });
-
-let score = classement["TEAM "+i]?.total || 0;
 
 container.innerHTML+=`
 <div class="team">
-<span class="title">TEAM ${i}</span>
-<span class="score">${score} pts</span>
-<br>
+<strong>TEAM ${i+1}</strong>
 ${html}
 </div>
 `;
@@ -259,27 +177,9 @@ ${html}
 
 }
 
-/* CLEAR */
 function clearTeams(){
 document.getElementById("teams").innerHTML="";
 }
-
-/* 💣 STATS CASH */
-function updateStats(){
-
-let players=getPlayers();
-
-let count = players.length;
-let entry = count * 10;
-let prize = entry;
-
-document.getElementById("countPlayers").innerText = count;
-document.getElementById("entryMoney").innerText = entry + "€";
-document.getElementById("prizePool").innerText = prize + "€";
-
-}
-
-setInterval(updateStats,1000);
 
 update();
 
