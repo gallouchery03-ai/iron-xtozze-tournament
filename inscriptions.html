@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Inscriptions</title>
+<title>Inscriptions Tournoi</title>
 
 <style>
+
 body{
 background:#050505;
 color:white;
@@ -21,6 +22,8 @@ input{
 width:100%;
 padding:10px;
 margin:5px 0;
+border-radius:6px;
+border:none;
 }
 
 button{
@@ -31,27 +34,51 @@ padding:10px;
 margin:5px;
 border-radius:8px;
 cursor:pointer;
+font-weight:bold;
 }
 
 .player{
 background:#111;
-padding:8px;
+padding:10px;
 margin:5px 0;
 border-radius:8px;
 display:flex;
 justify-content:space-between;
+align-items:center;
 }
+
+.paid{
+color:#00ff00;
+font-weight:bold;
+}
+
+.notpaid{
+color:#ffcc00;
+}
+
+.money{
+text-align:center;
+margin:10px;
+font-size:18px;
+color:#00ff00;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h1>INSCRIPTIONS</h1>
+<h1>👥 INSCRIPTIONS TOURNOI</h1>
+
+<div class="money">
+💰 Entrée : 10€ / joueur
+</div>
 
 <input id="name" placeholder="Pseudo joueur">
 
-<button onclick="addPlayer()">Ajouter</button>
-<button onclick="clearAll()">Reset</button>
+<button onclick="addPlayer()">➕ Ajouter joueur</button>
+<button onclick="clearAll()">🗑 Reset</button>
 
 <div id="list"></div>
 
@@ -59,46 +86,76 @@ justify-content:space-between;
 
 let players = JSON.parse(localStorage.getItem("players") || "[]");
 
+/* SAVE */
 function save(){
 localStorage.setItem("players", JSON.stringify(players));
 }
 
+/* ADD PLAYER */
 function addPlayer(){
 
 let name = document.getElementById("name").value;
 if(!name) return;
 
-players.push(name);
+players.push({
+name:name,
+paid:false
+});
+
 document.getElementById("name").value="";
 
 save();
 render();
 }
 
+/* TOGGLE PAY */
+function togglePay(i){
+players[i].paid = !players[i].paid;
+save();
+render();
+}
+
+/* REMOVE */
 function removePlayer(i){
 players.splice(i,1);
 save();
 render();
 }
 
+/* CLEAR */
 function clearAll(){
 players = [];
 save();
 render();
 }
 
+/* RENDER */
 function render(){
 
 let div = document.getElementById("list");
 div.innerHTML="";
 
 players.forEach((p,i)=>{
+
 div.innerHTML += `
 <div class="player">
-${p}
+
+<div>
+${p.name}
+<br>
+<span class="${p.paid ? 'paid' : 'notpaid'}">
+${p.paid ? 'PAYÉ ✔ (10€)' : 'NON PAYÉ ❌'}
+</span>
+</div>
+
+<div>
+<button onclick="togglePay(${i})">PAYÉ</button>
 <button onclick="removePlayer(${i})">X</button>
 </div>
+
+</div>
 `;
+
 });
 
 }
