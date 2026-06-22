@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>SWITCH TOURNOI</title>
+<title>TOURNOI WZ SWITCH</title>
 
 <style>
 
@@ -19,6 +19,7 @@ color:#ff3030;
 text-shadow:0 0 10px red;
 }
 
+/* TIMER */
 #timer{
 text-align:center;
 font-size:60px;
@@ -31,6 +32,7 @@ margin:10px;
 text-align:center;
 }
 
+/* BUTTONS */
 button{
 background:#ff3030;
 color:white;
@@ -46,6 +48,30 @@ button:hover{
 opacity:0.85;
 }
 
+/* INFO TABLE */
+.info{
+margin:20px auto;
+text-align:center;
+}
+
+#stats{
+display:flex;
+justify-content:center;
+gap:20px;
+margin-top:10px;
+flex-wrap:wrap;
+}
+
+.box{
+background:#111;
+border:1px solid red;
+padding:10px 15px;
+border-radius:8px;
+min-width:150px;
+font-weight:bold;
+}
+
+/* TEAMS */
 .team{
 background:#111;
 border:1px solid #ff3030;
@@ -83,7 +109,6 @@ font-weight:bold;
 
 <div class="center">
 
-<!-- TIMER -->
 <button onclick="start()">START</button>
 <button onclick="pause()">PAUSE</button>
 <button onclick="reset()">STOP</button>
@@ -96,9 +121,31 @@ font-weight:bold;
 
 <br><br>
 
-<!-- TEAM BUTTONS -->
 <button onclick="generate()">🎲 CRÉER ÉQUIPES</button>
 <button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
+
+</div>
+
+<!-- 💣 TABLE CASHPRIZE -->
+<div class="info">
+
+<h2>📊 INFORMATIONS TOURNOI</h2>
+
+<div id="stats">
+
+<div class="box">
+👥 INSCRITS : <span id="countPlayers">0</span>
+</div>
+
+<div class="box">
+💰 ENTRÉE (10€) : <span id="entryMoney">0€</span>
+</div>
+
+<div class="box">
+🏆 PRIZEPOOL : <span id="prizePool">0€</span>
+</div>
+
+</div>
 
 </div>
 
@@ -122,10 +169,7 @@ String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 function start(){
 if(interval)return;
 interval=setInterval(()=>{
-if(time>0){
-time--;
-update();
-}
+if(time>0){time--;update();}
 },1000);
 }
 
@@ -170,7 +214,7 @@ else mult=1;
 return Math.round(kills*mult);
 }
 
-/* ADD RESULT (option future) */
+/* RESULT */
 function addResult(team,kills,pos){
 
 if(!classement[team]){
@@ -220,7 +264,23 @@ function clearTeams(){
 document.getElementById("teams").innerHTML="";
 }
 
-/* INIT */
+/* 💣 STATS CASH */
+function updateStats(){
+
+let players=getPlayers();
+
+let count = players.length;
+let entry = count * 10;
+let prize = entry;
+
+document.getElementById("countPlayers").innerText = count;
+document.getElementById("entryMoney").innerText = entry + "€";
+document.getElementById("prizePool").innerText = prize + "€";
+
+}
+
+setInterval(updateStats,1000);
+
 update();
 
 </script>
