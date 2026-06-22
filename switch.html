@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>SWITCH TOURNOI</title>
+<title>SWITCH FINAL UI</title>
 
 <style>
 
@@ -42,10 +42,16 @@ cursor:pointer;
 font-weight:bold;
 }
 
-button:hover{
-opacity:0.85;
+input{
+padding:8px;
+margin:5px;
+border-radius:6px;
+border:none;
+width:120px;
+text-align:center;
 }
 
+/* TEAMS */
 .team{
 background:#111;
 border:1px solid #ff3030;
@@ -93,10 +99,25 @@ font-weight:bold;
 <button onclick="add(30)">+30s</button>
 <button onclick="add(60)">+1m</button>
 
-<br><br>
+</div>
 
-<button onclick="generate()">🎲 GÉNÉRER ÉQUIPES</button>
-<button onclick="clearTeams()">🗑 SUPPRIMER ÉQUIPES</button>
+<br>
+
+<!-- 🔥 INPUT GAME -->
+<div class="center">
+
+<select id="teamSelect">
+<option>TEAM 1</option>
+<option>TEAM 2</option>
+<option>TEAM 3</option>
+<option>TEAM 4</option>
+<option>TEAM 5</option>
+</select>
+
+<input id="kills" type="number" placeholder="Kills">
+<input id="position" type="number" placeholder="Position">
+
+<button onclick="submitGame()">✔ VALIDER GAME</button>
 
 </div>
 
@@ -107,19 +128,19 @@ font-weight:bold;
 <script>
 
 /* TIMER */
-let time = 0;
-let interval = null;
+let time=0;
+let interval=null;
 
 function update(){
-let m = Math.floor(time/60);
-let s = time%60;
-document.getElementById("timer").innerText =
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("timer").innerText=
 String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
 function start(){
-if(interval) return;
-interval = setInterval(()=>{
+if(interval)return;
+interval=setInterval(()=>{
 if(time>0){
 time--;
 update();
@@ -129,17 +150,17 @@ update();
 
 function pause(){
 clearInterval(interval);
-interval = null;
+interval=null;
 }
 
 function reset(){
 pause();
-time = 0;
+time=0;
 update();
 }
 
 function add(sec){
-time += sec;
+time+=sec;
 update();
 }
 
@@ -155,71 +176,64 @@ function save(){
 localStorage.setItem("classement",JSON.stringify(classement));
 }
 
-/* 🔥 TON BARÈME EXACT */
-function calc(kills,position){
+/* 🔥 BARÈME FINAL */
+function calc(kills,pos){
 
-let mult = 1;
+let mult=1;
 
-if(position == 1) mult = 1.6;
-else if(position <= 5) mult = 1.4;
-else if(position <= 10) mult = 1.2;
-else mult = 1;
+if(pos==1) mult=1.6;
+else if(pos<=5) mult=1.4;
+else if(pos<=10) mult=1.2;
+else mult=1;
 
-return Math.round(kills * mult);
+return Math.round(kills*mult);
 }
 
-/* ADD RESULT */
-function addResult(team,kills,position){
+/* 🔥 SUBMIT GAME (UI SIMPLE) */
+function submitGame(){
+
+let team = document.getElementById("teamSelect").value;
+let kills = Number(document.getElementById("kills").value);
+let pos = Number(document.getElementById("position").value);
+
+if(!kills || !pos) return alert("Remplis kills + position");
 
 if(!classement[team]){
-classement[team] = {total:0};
+classement[team]={total:0};
 }
 
-classement[team].total += calc(kills,position);
+classement[team].total += calc(kills,pos);
 
 save();
+
+alert("GAME VALIDÉE ✔");
+
+render();
+
 }
 
-/* GENERATE TEAMS */
-function generate(){
+/* TEAMS */
+function render(){
 
-let players = getPlayers();
-let size = 3;
+let container=document.getElementById("teams");
+container.innerHTML="";
 
-let container = document.getElementById("teams");
-container.innerHTML = "";
+for(let i=1;i<=5;i++){
 
-for(let i=0;i<5;i++){
+let team="TEAM "+i;
+let score = classement[team]?.total || 0;
 
-let teamPlayers = players.slice(i*size,(i+1)*size);
-
-let html = "";
-
-teamPlayers.forEach(p=>{
-html += `<span class="player">${p}</span>`;
-});
-
-let score = classement["TEAM "+(i+1)]?.total || 0;
-
-container.innerHTML += `
+container.innerHTML+=`
 <div class="team">
-<span class="title">TEAM ${i+1}</span>
+<span class="title">${team}</span>
 <span class="score">${score} pts</span>
-<br>
-${html}
 </div>
 `;
 }
 
 }
 
-/* CLEAR */
-function clearTeams(){
-document.getElementById("teams").innerHTML="";
-}
-
-/* INIT */
-update();
+render();
 
 </script>
 
