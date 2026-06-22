@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Admin Games</title>
 
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+input,select{
+padding:10px;
+margin:5px;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:10px;
+margin:5px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🎮 ADMIN GAME</h1>
+
+<select id="team">
+<option>TEAM 1</option>
+<option>TEAM 2</option>
+<option>TEAM 3</option>
+<option>TEAM 4</option>
+<option>TEAM 5</option>
+<option>TEAM 6</option>
+<option>TEAM 7</option>
+<option>TEAM 8</option>
+<option>TEAM 9</option>
+<option>TEAM 10</option>
+<option>TEAM 11</option>
+<option>TEAM 12</option>
+<option>TEAM 13</option>
+<option>TEAM 14</option>
+<option>TEAM 15</option>
+<option>TEAM 16</option>
+<option>TEAM 17</option>
+</select>
+
+<input id="kills" type="number" placeholder="Kills">
+<input id="pos" type="number" placeholder="Position">
+
+<button onclick="addGame()">VALIDER GAME</button>
+
+<script>
+
+let classement = JSON.parse(localStorage.getItem("classement") || "{}");
+
+function calc(k,p){
+
+let m=1;
+
+if(p==1)m=1.6;
+else if(p<=5)m=1.4;
+else if(p<=10)m=1.2;
+
+return Math.round(k*m);
+}
+
+function addGame(){
+
+let team=document.getElementById("team").value;
+let k=Number(document.getElementById("kills").value);
+let p=Number(document.getElementById("pos").value);
+
+if(!k||!p)return alert("Remplis tout");
+
+if(!classement[team]){
+classement[team]={total:0};
+}
+
+classement[team].total += calc(k,p);
+
+localStorage.setItem("classement",JSON.stringify(classement));
+
+alert("GAME AJOUTÉE ✔");
+}
+
+</script>
+
+</body>
+</html>
