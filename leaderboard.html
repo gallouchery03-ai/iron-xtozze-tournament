@@ -2,31 +2,35 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Classement Tournoi</title>
+<title>Classement Pro</title>
 
 <style>
 
 body{
-background:#050505;
+margin:0;
+background:radial-gradient(circle,#1a0000,#050505);
 color:white;
 font-family:Arial;
-padding:20px;
 }
 
 h1{
 text-align:center;
 color:#ff3030;
+padding:15px;
 }
 
 table{
-width:100%;
+width:90%;
+margin:auto;
 border-collapse:collapse;
-margin-top:20px;
+background:rgba(0,0,0,0.7);
+border-radius:10px;
+overflow:hidden;
 }
 
 th,td{
-border:1px solid red;
-padding:10px;
+padding:12px;
+border-bottom:1px solid red;
 text-align:center;
 }
 
@@ -35,14 +39,20 @@ background:#111;
 color:#ff3030;
 }
 
-.players{
-color:#ccc;
-font-size:13px;
+.menu{
+text-align:center;
+padding:10px;
 }
 
-.score{
-color:#00ff00;
-font-weight:bold;
+.menu a{
+color:white;
+text-decoration:none;
+padding:10px;
+background:#111;
+border:1px solid red;
+border-radius:8px;
+margin:5px;
+display:inline-block;
 }
 
 </style>
@@ -51,58 +61,48 @@ font-weight:bold;
 
 <body>
 
-<h1>🏆 CLASSEMENT TOURNOI</h1>
+<h1>🏆 CLASSEMENT PRO</h1>
+
+<div class="menu">
+<a href="index.html">🏠 Accueil</a>
+<a href="switch.html">🎮 Teams</a>
+</div>
 
 <table>
-
 <tr>
 <th>TEAM</th>
-<th>JOUEURS</th>
 <th>POINTS</th>
 </tr>
 
-<tbody id="board"></tbody>
-
+<tbody id="t"></tbody>
 </table>
 
 <script>
 
-let players = JSON.parse(localStorage.getItem("players") || "[]");
-let classement = JSON.parse(localStorage.getItem("classement") || "{}");
+let data=JSON.parse(localStorage.getItem("classement")||"{}");
 
-function getTeamPlayers(i){
-let size=3;
-let start=(i-1)*size;
-return players.slice(start,start+size);
+function get(t){
+return data[t]?.total||0;
 }
 
-function getScore(team){
-return classement[team]?.total || 0;
-}
+function load(){
 
-function render(){
-
-let b=document.getElementById("board");
-b.innerHTML="";
+let t=document.getElementById("t");
+t.innerHTML="";
 
 for(let i=1;i<=17;i++){
 
-let p = getTeamPlayers(i).map(x=>x.name || x).join(" / ");
-
-b.innerHTML+=`
+t.innerHTML+=`
 <tr>
 <td>TEAM ${i}</td>
-<td class="players">${p}</td>
-<td class="score">${getScore("TEAM "+i)}</td>
+<td>${get("TEAM "+i)}</td>
 </tr>
 `;
 }
 
 }
 
-render();
-
-setInterval(render,2000);
+load();
 
 </script>
 
