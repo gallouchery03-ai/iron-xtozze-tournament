@@ -1,1 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>OBS OVERLAY</title>
 
+<style>
+
+body{
+margin:0;
+background:transparent;
+font-family:Arial;
+color:white;
+overflow:hidden;
+}
+
+/* TOP BAR */
+#top{
+position:absolute;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.6);
+padding:10px 20px;
+border:1px solid red;
+border-radius:10px;
+text-align:center;
+}
+
+#timer{
+font-size:30px;
+color:#ff3030;
+font-weight:bold;
+}
+
+/* SCOREBOARD */
+#scoreboard{
+position:absolute;
+top:100px;
+right:20px;
+width:250px;
+background:rgba(0,0,0,0.5);
+border:1px solid red;
+border-radius:10px;
+padding:10px;
+}
+
+.team{
+display:flex;
+justify-content:space-between;
+padding:5px 0;
+border-bottom:1px solid rgba(255,0,0,0.2);
+}
+
+.team:last-child{
+border:none;
+}
+
+.name{
+font-size:14px;
+}
+
+.score{
+color:#00ff00;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="top">
+🔥 WARZONE TOURNAMENT 🔥
+<div id="timer">00:00</div>
+</div>
+
+<div id="scoreboard"></div>
+
+<script>
+
+/* TIMER */
+let time=0;
+
+function updateTimer(){
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("timer").innerText=
+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+setInterval(()=>{
+time++;
+updateTimer();
+},1000);
+
+/* SCORES */
+function getData(){
+return JSON.parse(localStorage.getItem("classement")||"{}");
+}
+
+function render(){
+
+let data=getData();
+let box=document.getElementById("scoreboard");
+box.innerHTML="";
+
+for(let i=1;i<=8;i++){
+
+let score=data["TEAM "+i]?.total||0;
+
+box.innerHTML+=`
+<div class="team">
+<span class="name">TEAM ${i}</span>
+<span class="score">${score}</span>
+</div>
+`;
+}
+
+}
+
+setInterval(render,2000);
+render();
+
+</script>
+
+</body>
+</html>
